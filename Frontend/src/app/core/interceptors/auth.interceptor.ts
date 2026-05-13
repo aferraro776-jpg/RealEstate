@@ -9,13 +9,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const router = inject(Router);
     const token  = auth.token();
 
-    const authReq = token && !req.headers.has('Authorization')
+    const hasManualAuth = req.headers.has('Authorization');
+
+    const authReq = token && !hasManualAuth
         ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
         : req;
 
     return next(authReq).pipe(
         catchError((err) => {
-            if (err.status === 401) {
+            if (err.status === 401 && !hasManualAuth) {
                 auth.logout();
                 router.navigate(['/login']);
             }

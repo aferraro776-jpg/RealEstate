@@ -58,7 +58,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         User user = userDao.findByEmail(email).orElseThrow();
-        String jwt = jwtUtil.generateToken(email, "USER", user.getId());
+        String jwt = jwtUtil.generateToken(email, "BUYER", user.getId());
 
         String redirectUrl = "http://localhost:4200/oauth2/callback?token=" + jwt;
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
