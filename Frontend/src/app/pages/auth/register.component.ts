@@ -85,4 +85,8 @@ export class RegisterComponent {
       },
     });
   }
+
+  loginWithGoogle(): void {
+    this.auth.loginWithGoogle();
+  }
 }

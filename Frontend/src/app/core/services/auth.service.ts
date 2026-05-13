@@ -33,6 +33,16 @@ export class AuthService {
     );
   }
 
+  loginWithGoogle(): void {
+    window.location.href = `${environment.apiUrl}/oauth2/authorization/google`;
+  }
+
+  handleOAuthCallback(token: string): Observable<User> {
+    return this.http.get<User>(`${this.base}/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).pipe(tap((user) => this.persist({ token, user })));
+  }
+
   register(req: RegisterRequest): Observable<void> {
     const endpoint = req.role === 'SELLER'
         ? `${this.base}/register/seller`

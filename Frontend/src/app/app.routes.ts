@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
 import { roleGuard } from './core/guards/role.guard';
+import {OAuthCallbackComponent} from "./pages/auth/oauth-callback.components";
 
 export const routes: Routes = [
   {
@@ -65,4 +65,6 @@ export const routes: Routes = [
     loadComponent: () =>
         import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent),
   },
+
+  { path: 'oauth2/callback', component: OAuthCallbackComponent },
 ];

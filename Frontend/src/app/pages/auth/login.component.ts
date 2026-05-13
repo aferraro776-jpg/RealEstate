@@ -32,5 +32,9 @@ export class LoginComponent {
       },
     });
   }
+
+  loginWithGoogle(): void {
+    this.auth.loginWithGoogle();
+  }
 }
 

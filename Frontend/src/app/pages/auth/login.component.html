@@ -43,5 +43,16 @@
                 <a routerLink="/forgot-password">Password dimenticata?</a>
             </p>
         </form>
+
+        <div class="d-flex align-items-center my-3 gap-2">
+            <hr class="flex-grow-1 m-0">
+            <span class="small muted">oppure</span>
+            <hr class="flex-grow-1 m-0">
+        </div>
+
+        <button type="button" class="btn btn-google w-100" (click)="loginWithGoogle()">
+            <img src="assets/icons/google.png" width="20" height="20" alt="">
+            Accedi con Google
+        </button>
     </div>
 </section>
