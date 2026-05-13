@@ -35,7 +35,14 @@ export class SellerDashboardComponent implements OnInit {
 
   remove(p: Property): void {
     if (!confirm(`Eliminare "${p.title}"?`)) return;
-    this.svc.delete(p.id).subscribe({ next: () => this.load() });
+    this.svc.delete(p.id).subscribe({
+      next: () => {
+        this.items.update(list => list.filter(item => item.id !== p.id));
+        this.msg.set('Annuncio eliminato.');
+        setTimeout(() => this.msg.set(null), 3000);
+      },
+      error: () => this.msg.set('Errore durante l\'eliminazione.'),
+    });
   }
 
   lower(p: Property): void {

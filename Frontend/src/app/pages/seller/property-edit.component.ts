@@ -3,6 +3,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PropertyService } from '../../core/services/property.service';
+import { PhotoService, PhotoResponse } from '../../core/services/photo.service';
 import { REAL_ESTATE_TYPE_LABELS, RealEstateType, RealEstateRequest, PostCreateDto } from '../../core/models';
 
 @Component({
@@ -14,13 +15,15 @@ import { REAL_ESTATE_TYPE_LABELS, RealEstateType, RealEstateRequest, PostCreateD
 })
 export class PropertyEditComponent implements OnInit {
   private svc    = inject(PropertyService);
+  private photoSvc = inject(PhotoService);
   private route  = inject(ActivatedRoute);
   private router = inject(Router);
 
-  protected isNew      = true;
-  protected saving     = signal(false);
-  protected error      = signal<string | null>(null);
-  protected photosText = '';
+  protected isNew        = true;
+  protected saving       = signal(false);
+  protected uploading    = signal(false);
+  protected error        = signal<string | null>(null);
+  protected uploadedUrls = signal<string[]>([]);
 
   protected categories: { value: RealEstateType; label: string }[] = (
       Object.keys(REAL_ESTATE_TYPE_LABELS) as RealEstateType[]
@@ -28,13 +31,13 @@ export class PropertyEditComponent implements OnInit {
 
   protected model = {
     title: '', description: '', listingType: 'SALE' as 'SALE' | 'RENT',
-    price: 0, photos: [] as string[],
+    price: null as number | null,
   };
 
   protected re = {
     type:          'APARTMENT' as RealEstateType,
-    numberOfRooms: 0,
-    squareMetres:  0,
+    numberOfRooms: null as number | null,
+    squareMetres:  null as number | null,
     street:        '',
     civicNumber:   '',
     city:          '',
@@ -42,10 +45,10 @@ export class PropertyEditComponent implements OnInit {
     province:      '',
   };
 
-  protected apartment   = { floor: 0,    hasElevator: false };
-  protected villa       = { hasGarden: false, hasPool: false, numberOfFloors: 1 };
-  protected garage      = { width: 0,    height: 0, isElectric: false };
-  protected buildingLot = { cubature: 0, plannedUse: '' };
+  protected apartment   = { floor: null as number | null, hasElevator: false };
+  protected villa       = { hasGarden: false, hasPool: false, numberOfFloors: null as number | null };
+  protected garage      = { width: null as number | null, height: null as number | null, isElectric: false };
+  protected buildingLot = { cubature: null as number | null, plannedUse: '' };
   protected nonBuilding = { cropType: '' };
 
   ngOnInit(): void {
@@ -60,13 +63,12 @@ export class PropertyEditComponent implements OnInit {
           description: p.description,
           listingType: p.listingType,
           price:       p.price,
-          photos:      p.photos,
         };
-        this.photosText = p.photos.join('\n');
+        this.uploadedUrls.set(p.photos ?? []);
         this.re = {
           type:          p.category as RealEstateType,
-          numberOfRooms: (p as any).numberOfRooms ?? 0,
-          squareMetres:  p.squareMeters ?? 0,
+          numberOfRooms: (p as any).numberOfRooms ?? null,
+          squareMetres:  p.squareMeters ?? null,
           street:        p.address ?? '',
           civicNumber:   '',
           city:          p.city ?? '',
@@ -89,19 +91,58 @@ export class PropertyEditComponent implements OnInit {
     });
   }
 
-  protected onPhotosChange(v: string): void {
-    this.photosText   = v;
-    this.model.photos = v.split('\n').map(s => s.trim()).filter(Boolean);
+  protected onFilesSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) return;
+
+    this.uploading.set(true);
+    const files = Array.from(input.files);
+    let completed = 0;
+
+    files.forEach(file => {
+      this.photoSvc.upload(file).subscribe({
+        next: (photo: PhotoResponse) => {
+          this.uploadedUrls.update(urls => [...urls, photo.url]);
+          completed++;
+          if (completed === files.length) this.uploading.set(false);
+        },
+        error: () => {
+          this.error.set('Errore durante il caricamento di una foto.');
+          completed++;
+          if (completed === files.length) this.uploading.set(false);
+        },
+      });
+    });
+
+    input.value = '';
+  }
+
+  protected removePhoto(url: string): void {
+    this.uploadedUrls.update(urls => urls.filter(u => u !== url));
   }
 
   private extraFields(): Partial<RealEstateRequest> {
     switch (this.re.type) {
-      case 'APARTMENT':        return { ...this.apartment };
-      case 'VILLA':            return { ...this.villa };
-      case 'GARAGE':           return { ...this.garage };
-      case 'BUILDING_LOT':     return { ...this.buildingLot };
-      case 'NON_BUILDING_LOT': return { ...this.nonBuilding };
-      default:                 return {};
+      case 'APARTMENT': return {
+        floor:        this.apartment.floor        ?? undefined,
+        hasElevator:  this.apartment.hasElevator,
+      };
+      case 'VILLA': return {
+        hasGarden:      this.villa.hasGarden,
+        hasPool:        this.villa.hasPool,
+        numberOfFloors: this.villa.numberOfFloors ?? undefined,
+      };
+      case 'GARAGE': return {
+        width:      this.garage.width      ?? undefined,
+        height:     this.garage.height     ?? undefined,
+        isElectric: this.garage.isElectric,
+      };
+      case 'BUILDING_LOT': return {
+        cubature:   this.buildingLot.cubature   ?? undefined,
+        plannedUse: this.buildingLot.plannedUse,
+      };
+      case 'NON_BUILDING_LOT': return { cropType: this.nonBuilding.cropType };
+      default: return {};
     }
   }
 
@@ -109,9 +150,9 @@ export class PropertyEditComponent implements OnInit {
     return {
       type:          this.re.type,
       title:         this.model.title,
-      numberOfRooms: this.re.numberOfRooms,
+      numberOfRooms: this.re.numberOfRooms ?? 0,
       description:   this.model.description,
-      squareMetres:  this.re.squareMetres,
+      squareMetres:  this.re.squareMetres  ?? 0,
       street:        this.re.street,
       civicNumber:   this.re.civicNumber,
       city:          this.re.city,
@@ -128,8 +169,8 @@ export class PropertyEditComponent implements OnInit {
     const dto: PostCreateDto = {
       title:        this.model.title,
       description:  this.model.description,
-      currentPrice: this.model.price,
-      photoUrls:    this.model.photos.map(url => ({ url })),
+      currentPrice: this.model.price ?? 0,
+      photoUrls:    this.uploadedUrls().map(url => ({ url })),
       realEstate:   this.buildRealEstateDto(),
     };
 
