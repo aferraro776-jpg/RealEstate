@@ -1,0 +1,21 @@
+.brand-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--hw-primary);
+    color: #fff;
+    font-family: var(--font-serif);
+}
+
+.navbar .nav-link.active {
+    color: var(--hw-primary);
+    font-weight: 500;
+}
+
+.user-info {
+    color: var(--hw-muted);
+    font-size: 0.875rem;
+}

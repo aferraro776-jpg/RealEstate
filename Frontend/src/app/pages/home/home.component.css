@@ -1,0 +1,31 @@
+.hero-content {
+    min-height: 520px;
+}
+
+.hero-text {
+    max-width: 720px;
+}
+
+.hero-eyebrow {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    opacity: 0.85;
+    margin-bottom: 1rem;
+}
+
+.hero-lead {
+    opacity: 0.9;
+}
+
+/* TIPI DI UTENZA */
+.utenza-icon {
+    font-size: 2.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-content {
+        min-height: 420px;
+    }
+}

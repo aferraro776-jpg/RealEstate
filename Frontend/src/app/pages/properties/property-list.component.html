@@ -1,0 +1,105 @@
+<section class="page-pad">
+    <div class="container">
+        <h1 class="serif mb-2">Annunci</h1>
+        <p class="muted mb-4">{{ items().length }} risultati</p>
+
+        <div class="row g-4">
+
+            <!-- FILTRI -->
+            <aside class="col-lg-3">
+                <div class="filters-panel">
+                    <h6 class="filters-title">Filtri</h6>
+
+                    <div class="mb-3">
+                        <label class="form-label small">Cerca</label>
+                        <input class="form-control form-control-sm" [(ngModel)]="filters.q"
+                               (keyup.enter)="reload()" placeholder="Città, titolo...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small">Tipo</label>
+                        <select class="form-select form-select-sm"
+                                [(ngModel)]="filters.listingType" (change)="reload()">
+                            <option [ngValue]="undefined">Tutti</option>
+                            <option value="SALE">Vendita</option>
+                            <option value="RENT">Affitto</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small">Categoria</label>
+                        <select class="form-select form-select-sm"
+                                [(ngModel)]="filters.category" (change)="reload()">
+                            <option [ngValue]="undefined">Tutte</option>
+                            @for (c of categories; track c.value) {
+                                <option [value]="c.value">{{ c.label }}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small">Città</label>
+                        <input class="form-control form-control-sm"
+                               [(ngModel)]="filters.city" (change)="reload()">
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small">Prezzo min</label>
+                            <input type="number" class="form-control form-control-sm"
+                                   [(ngModel)]="filters.minPrice" (change)="reload()">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small">Prezzo max</label>
+                            <input type="number" class="form-control form-control-sm"
+                                   [(ngModel)]="filters.maxPrice" (change)="reload()">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small">m² minimi</label>
+                        <input type="number" class="form-control form-control-sm"
+                               [(ngModel)]="filters.minSquareMeters" (change)="reload()">
+                    </div>
+
+                    <button class="btn btn-hw-outline btn-sm w-100" (click)="clear()">
+                        Azzera filtri
+                    </button>
+                </div>
+            </aside>
+
+            <!-- LISTA -->
+            <div class="col-lg-9">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="muted small">Ordina per</span>
+                    <select class="form-select form-select-sm sort-select"
+                            [(ngModel)]="filters.sort" (change)="reload()">
+                        <option value="newest">Più recenti</option>
+                        <option value="price-asc">Prezzo crescente</option>
+                        <option value="price-desc">Prezzo decrescente</option>
+                        <option value="sqm-desc">Metratura maggiore</option>
+                    </select>
+                </div>
+
+                @if (loading()) {
+                    <p class="muted">Caricamento...</p>
+                } @else if (error()) {
+                    <div class="alert alert-warning">{{ error() }}</div>
+                } @else if (items().length === 0) {
+                    <div class="empty-state">
+                        <p class="muted mb-0">Nessun annuncio corrisponde ai criteri.</p>
+                    </div>
+                } @else {
+                    <div class="row g-4">
+                        @for (p of items(); track p.id) {
+                            <div class="col-sm-6 col-xl-4">
+                                <app-property-card [property]="p" />
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</section>

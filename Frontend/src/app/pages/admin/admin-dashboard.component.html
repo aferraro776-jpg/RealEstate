@@ -1,0 +1,103 @@
+<section class="page-pad">
+    <div class="container">
+        <h1 class="serif mb-4">Pannello Amministratore</h1>
+
+        <ul class="nav nav-pills mb-4">
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="tab() === 'users'"
+                   (click)="tab.set('users')" style="cursor:pointer;">
+                    Utenti
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" [class.active]="tab() === 'properties'"
+                   (click)="tab.set('properties')" style="cursor:pointer;">
+                    Annunci
+                </a>
+            </li>
+        </ul>
+
+        @if (tab() === 'users') {
+            <div class="table-responsive bg-white border rounded-3">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Ruolo</th>
+                        <th>Stato</th>
+                        <th>Azioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @for (u of users(); track u.id) {
+                            <tr>
+                                <td>{{ u.name }} {{ u.surname }}</td>
+                                <td class="muted small">{{ u.email }}</td>
+                                <td>
+                                    <select class="form-select form-select-sm"
+                                            [ngModel]="u.role"
+                                            (ngModelChange)="changeRole(u, $event)">
+                                        @for (r of roles; track r) {
+                                            <option [value]="r">{{ roleLabel(r) }}</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td>
+                                    @if (u.banned) {
+                                        <span class="hw-badge danger">Bannato</span>
+                                    } @else {
+                                        <span class="hw-badge">Attivo</span>
+                                    }
+                                </td>
+                                <td class="text-nowrap">
+                                    <button class="btn btn-sm btn-outline-warning me-1"
+                                            (click)="toggleBan(u)">
+                                        {{ u.banned ? 'Sblocca' : 'Banna' }}
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            (click)="deleteUser(u)">
+                                        Elimina
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @if (tab() === 'properties') {
+            <div class="table-responsive bg-white border rounded-3">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Codice</th>
+                        <th>Titolo</th>
+                        <th>Venditore</th>
+                        <th>Prezzo</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @for (p of properties(); track p.id) {
+                            <tr>
+                                <td>{{ p.code }}</td>
+                                <td><a [routerLink]="['/properties', p.id]">{{ p.title }}</a></td>
+                                <td>{{ p.sellerName }}</td>
+                                <td>{{ p.price | number:'1.0-0' }} €</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            (click)="deleteProperty(p)">
+                                        Elimina
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+    </div>
+</section>

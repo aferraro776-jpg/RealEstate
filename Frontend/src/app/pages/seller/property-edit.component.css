@@ -1,0 +1,13 @@
+.edit-container {
+    max-width: 760px;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.back-link:hover {
+    color: var(--hw-primary);
+}

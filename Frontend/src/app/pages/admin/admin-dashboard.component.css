@@ -1,0 +1,15 @@
+.nav-pills .nav-link {
+    color: var(--hw-accent);
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--hw-primary);
+    color: #fff;
+}
+
+.table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--hw-muted);
+}

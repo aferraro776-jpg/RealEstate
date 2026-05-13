@@ -1,0 +1,32 @@
+.detail-container {
+    max-width: 900px;
+}
+
+.detail-photo {
+    max-height: 420px;
+    object-fit: cover;
+}
+
+.price-box {
+    background: #fff;
+    border: 1px solid var(--hw-border);
+    border-radius: 14px;
+    padding: 1rem;
+}
+
+.price-label {
+    letter-spacing: 0.1em;
+}
+
+.price-current {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--hw-accent);
+}
+
+.review-card {
+    background: #fff;
+    border: 1px solid var(--hw-border);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+}

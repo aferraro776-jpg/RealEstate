@@ -1,0 +1,77 @@
+<section class="page-pad">
+    <div class="container detail-container">
+
+        @if (loading()) {
+            <p class="muted">Caricamento…</p>
+
+        } @else if (property() === null) {
+            <p class="muted">Annuncio non trovato.</p>
+
+        } @else {
+            <h1 class="serif mb-1">{{ property()!.title }}</h1>
+            <p class="muted mb-3">
+                <i class="bi bi-geo-alt"></i>
+                {{ property()!.city }} — {{ property()!.address }}
+            </p>
+
+            <img
+                    [src]="property()!.photos[0] || placeholder"
+                    [alt]="property()!.title"
+                    class="detail-photo rounded-3 mb-4 w-100"
+                    loading="lazy"
+                    width="900"
+                    height="420"
+            />
+
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="d-flex gap-2 mb-3 flex-wrap">
+                        <span class="hw-badge primary">{{ listingLabel() }}</span>
+                        <span class="hw-badge">{{ catLabel() }}</span>
+                        <span class="hw-badge">#{{ property()!.code }}</span>
+                    </div>
+                    <p>{{ property()!.description }}</p>
+                    <p class="muted small">
+                        <strong>Superficie:</strong> {{ property()!.squareMeters }} m²
+                        &nbsp;·&nbsp;
+                        <strong>Venditore:</strong> {{ property()!.sellerName }}
+                    </p>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="price-box">
+                        <p class="mb-1 muted small text-uppercase price-label">Prezzo</p>
+                        @if (property()!.oldPrice && property()!.oldPrice! > property()!.price) {
+                            <span class="price-old">{{ property()!.oldPrice | number:'1.0-0' }} €</span>
+                        }
+                        <p class="price-current mb-0">
+                            {{ property()!.price | number:'1.0-0' }} €
+                            @if (property()!.listingType === 'RENT') {
+                                <small class="muted">/mese</small>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECENSIONI -->
+            <hr class="my-4" />
+            <h3 class="serif mb-3">Recensioni</h3>
+
+            @if (reviews().length === 0) {
+                <p class="muted">Nessuna recensione ancora.</p>
+            } @else {
+                @for (r of reviews(); track r.id) {
+                    <div class="review-card mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <strong>{{ r.buyerName }}</strong>
+                            <span class="muted small">{{ r.rating }}/5 ★</span>
+                        </div>
+                        <p class="mb-0 small">{{ r.comment }}</p>
+                    </div>
+                }
+            }
+        }
+
+    </div>
+</section>

@@ -1,0 +1,9 @@
+.footer-links a {
+    color: var(--hw-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--hw-primary);
+}

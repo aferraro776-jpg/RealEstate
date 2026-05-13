@@ -1,0 +1,78 @@
+<!-- HERO -->
+<section class="hero">
+    <img
+            class="hero-img"
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80"
+            alt="Casa"
+            loading="lazy"
+            width="2000"
+            height="1333"
+    />
+    <div class="container py-5 d-flex flex-column justify-content-end hero-content">
+        <div class="hw-reveal hero-text">
+            <p class="hero-eyebrow">Annunci immobiliari in Italia</p>
+            <h1 class="display-3 mb-3 serif">Trova la casa giusta per te.</h1>
+            <p class="lead mb-4 hero-lead">
+                Vendita e affitto di appartamenti, ville, terreni edificabili e box auto.
+                Cerca per categoria, ordina per prezzo o metratura, contatta direttamente i venditori.
+            </p>
+            <div class="d-flex gap-2 flex-wrap">
+                <a routerLink="/properties" class="btn btn-hw">Esplora gli annunci</a>
+                <a routerLink="/register"   class="btn btn-light">Registrati</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ANNUNCI RECENTI -->
+<section class="page-pad">
+    <div class="container">
+        <div class="d-flex align-items-end justify-content-between mb-4">
+            <h2 class="section-title mb-0">Annunci recenti</h2>
+            <a routerLink="/properties" class="btn btn-link text-decoration-none">Vedi tutti →</a>
+        </div>
+
+        @if (loading()) {
+            <p class="muted">Caricamento in corso...</p>
+        } @else if (error()) {
+            <div class="alert alert-warning">
+                Impossibile contattare il backend ({{ error() }}).<br>
+                Verifica che il server Spring Boot sia attivo su <code>{{ apiHint }}</code>.
+            </div>
+        } @else if (recent().length === 0) {
+            <p class="muted">Nessun annuncio disponibile.</p>
+        } @else {
+            <div class="row g-4">
+                @for (p of recent(); track p.id) {
+                    <div class="col-sm-6 col-lg-4 col-xl-3">
+                        <app-property-card [property]="p" />
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+<!-- TIPI DI UTENZA -->
+<section class="page-pad bg-white border-top">
+    <div class="container text-center">
+        <h2 class="section-title">Tre tipi di utenza</h2>
+        <div class="row g-4 mt-2">
+            <div class="col-md-4">
+                <i class="bi bi-search fs-1 text-primary"></i>
+                <h4 class="serif mt-3">Acquirenti</h4>
+                <p class="muted">Cercano e filtrano gli immobili, contattano i venditori, scrivono recensioni.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-house-add fs-1 text-primary"></i>
+                <h4 class="serif mt-3">Venditori</h4>
+                <p class="muted">Pubblicano annunci, ribassano i prezzi, creano aste, ricevono richieste di contatto.</p>
+            </div>
+            <div class="col-md-4">
+                <i class="bi bi-shield-lock fs-1 text-primary"></i>
+                <h4 class="serif mt-3">Amministratori</h4>
+                <p class="muted">Gestiscono utenti e annunci, possono bannare e nominare altri amministratori.</p>
+            </div>
+        </div>
+    </div>
+</section>

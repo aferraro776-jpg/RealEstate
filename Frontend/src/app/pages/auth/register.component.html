@@ -1,0 +1,140 @@
+<section class="page-pad">
+    <div class="container" style="max-width: 520px;">
+        <h1 class="serif mb-2">Crea un account</h1>
+        <p class="muted mb-4">Scegli il tuo ruolo per iniziare.</p>
+
+        <form (ngSubmit)="submit()" #f="ngForm" class="bg-white p-4 rounded-3 border">
+
+            <div class="row g-3 mb-3">
+                <div class="col">
+                    <label class="form-label small text-uppercase muted">Nome</label>
+                    <input class="form-control" name="name"
+                           [(ngModel)]="name" required minlength="3">
+                </div>
+                <div class="col">
+                    <label class="form-label small text-uppercase muted">Cognome</label>
+                    <input class="form-control" name="surname"
+                           [(ngModel)]="surname" required minlength="3">
+                </div>
+            </div>
+
+            <!-- Email + bottone OTP -->
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Email</label>
+                <div class="input-group">
+                    <input type="email" class="form-control" name="email"
+                           [(ngModel)]="email" required>
+                    <button type="button" class="btn btn-hw-outline"
+                            (click)="requestOtp()" [disabled]="otpLoading() || !email">
+                        {{ otpLoading() ? '...' : otpSent() ? 'Invia di nuovo' : 'Invia OTP' }}
+                    </button>
+                </div>
+                @if (otpMsg()) {
+                    <div class="form-text mt-1"
+                         [class.text-success]="otpSent()"
+                         [class.text-danger]="!otpSent()">
+                        {{ otpMsg() }}
+                    </div>
+                }
+            </div>
+
+            <!-- Codice OTP -->
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Codice OTP</label>
+                <input type="text" class="form-control" name="otp"
+                       [(ngModel)]="otp" required
+                       placeholder="Inserisci il codice ricevuto via email">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Password</label>
+                <div class="input-group">
+                    <input [type]="showPassword() ? 'text' : 'password'"
+                           class="form-control" name="password"
+                           [(ngModel)]="password" required minlength="8">
+                    <button type="button" class="btn btn-outline-secondary"
+                            (click)="showPassword.set(!showPassword())"
+                            aria-label="Mostra/nascondi password">
+                        <img [src]="showPassword() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
+                             width="20" height="20" alt="">
+                    </button>
+                </div>
+                <div class="form-text small text-muted mt-1">
+                    Min. 8 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale
+                    (es. <code>!</code> <code>&#64;</code> <code>#</code>).
+                </div>
+            </div>
+
+            <!-- Conferma password -->
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Conferma password</label>
+                <div class="input-group">
+                    <input [type]="showConfirm() ? 'text' : 'password'"
+                           class="form-control" name="confirmPassword"
+                           [(ngModel)]="confirmPassword" required>
+                    <button type="button" class="btn btn-outline-secondary"
+                            (click)="showConfirm.set(!showConfirm())"
+                            aria-label="Mostra/nascondi conferma">
+                        <img [src]="showConfirm() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
+                             width="20" height="20" alt="">
+                    </button>
+                </div>
+                @if (confirmPassword && password !== confirmPassword) {
+                    <div class="form-text text-danger mt-1">Le password non coincidono.</div>
+                }
+            </div>
+
+            <!-- Data di nascita -->
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Data di nascita</label>
+                <input type="date" class="form-control" name="birthDate"
+                       [(ngModel)]="birthDate" required>
+            </div>
+
+            <!-- Ruolo -->
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Ruolo</label>
+                <select class="form-select" name="role" [(ngModel)]="role">
+                    <option value="BUYER">Acquirente</option>
+                    <option value="SELLER">Venditore</option>
+                </select>
+            </div>
+
+            @if (role === 'SELLER') {
+                <div class="mb-3">
+                    <label class="form-label small text-uppercase muted">Partita IVA</label>
+                    <input class="form-control" name="vatNumber"
+                           [(ngModel)]="vatNumber" [required]="role === 'SELLER'">
+                    <div class="form-text small text-muted mt-1">Obbligatoria per i venditori.</div>
+                </div>
+            }
+
+            @if (errors().length > 0) {
+                <div class="alert alert-danger py-2 small mb-3">
+                    <ul class="mb-0 ps-3">
+                        @for (e of errors(); track e) {
+                            <li>{{ e }}</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            @if (success()) {
+                <div class="alert alert-success py-2 small mb-3">
+                    Registrazione avvenuta! <a routerLink="/login">Accedi ora →</a>
+                </div>
+            }
+
+            <button type="submit" class="btn btn-hw w-100"
+                    [disabled]="loading() || f.invalid || success() || password !== confirmPassword">
+                {{ loading() ? 'Attendere...' : success() ? 'Registrato!' : 'Crea account' }}
+            </button>
+
+            <p class="text-center mt-3 mb-0 small muted">
+                Hai già un account? <a routerLink="/login">Accedi</a>
+            </p>
+
+        </form>
+    </div>
+</section>

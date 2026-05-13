@@ -1,0 +1,160 @@
+/* Variabili globali */
+:root {
+  --hw-primary: #1f4d3a;
+  --hw-primary-dark: #143124;
+  --hw-accent: #d97a3a;
+  --hw-bg: #faf7f2;
+  --hw-text: #1c1a17;
+  --hw-muted: #6b6660;
+  --hw-border: #e3ddd3;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--hw-bg);
+  color: var(--hw-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .serif {
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+a { color: var(--hw-primary); text-decoration: none; }
+a:hover { color: var(--hw-primary-dark); }
+
+/* === REGOLE CSS PERSONALIZZATE (>= 5) === */
+
+/* 1) Card immobile con effetto hover elegante */
+.property-card {
+  background: #fff;
+  border: 1px solid var(--hw-border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform .35s cubic-bezier(.2,.7,.2,1),
+              box-shadow .35s cubic-bezier(.2,.7,.2,1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.property-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 45px -22px rgba(20, 30, 25, .35);
+}
+.property-card .img-wrap {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #eee;
+}
+.property-card .img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .7s cubic-bezier(.2,.7,.2,1);
+}
+.property-card:hover .img-wrap img { transform: scale(1.06); }
+
+/* 2) Prezzo barrato (ribasso del venditore) */
+.price-old {
+  text-decoration: line-through;
+  color: var(--hw-muted);
+  font-size: .9em;
+  margin-right: .5rem;
+}
+.price-new {
+  color: var(--hw-accent);
+  font-weight: 700;
+}
+
+/* 3) Badge ruolo / categoria */
+.hw-badge {
+  display: inline-block;
+  padding: .25rem .65rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--hw-bg);
+  color: var(--hw-text);
+  border: 1px solid var(--hw-border);
+}
+.hw-badge.primary { background: var(--hw-primary); color: #fff; border-color: var(--hw-primary); }
+.hw-badge.accent  { background: var(--hw-accent);  color: #fff; border-color: var(--hw-accent); }
+.hw-badge.danger  { background: #b13434;           color: #fff; border-color: #b13434; }
+
+/* 4) Hero gradient overlay */
+.hero {
+  position: relative;
+  min-height: 520px;
+  background: #222;
+  color: #fff;
+  overflow: hidden;
+}
+.hero .hero-img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.hero::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(20,30,25,.20) 0%,
+    rgba(20,30,25,.55) 60%,
+    rgba(20,30,25,.85) 100%
+  );
+}
+.hero .container { position: relative; z-index: 2; }
+
+/* 5) Animazione di apparizione */
+@keyframes hwReveal {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hw-reveal { animation: hwReveal .65s cubic-bezier(.2,.7,.2,1) both; }
+
+/* 6) Pulsante primario brand */
+.btn-hw {
+  background: var(--hw-primary);
+  color: #fff;
+  border: none;
+  padding: .6rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 500;
+  letter-spacing: .02em;
+  transition: background .2s;
+}
+.btn-hw:hover { background: var(--hw-primary-dark); color: #fff; }
+.btn-hw-outline {
+  background: transparent;
+  color: var(--hw-primary);
+  border: 1px solid var(--hw-primary);
+  padding: .55rem 1.3rem;
+  border-radius: 999px;
+}
+.btn-hw-outline:hover { background: var(--hw-primary); color: #fff; }
+
+/* 7) Override Bootstrap */
+.text-primary { color: var(--hw-primary) !important; }
+.bg-primary   { background: var(--hw-primary) !important; }
+.form-control:focus, .form-select:focus {
+  border-color: var(--hw-primary);
+  box-shadow: 0 0 0 .2rem rgba(31, 77, 58, .15);
+}
+
+/* Layout helper */
+.page-pad { padding: 3rem 0; }
+.muted { color: var(--hw-muted); }
+.section-title { font-size: 2.25rem; margin-bottom: 1.5rem; }
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .hero { min-height: 420px; }
+  .section-title { font-size: 1.8rem; }
+}

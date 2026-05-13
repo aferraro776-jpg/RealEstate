@@ -1,0 +1,13 @@
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    border: 1px dashed var(--hw-border);
+    border-radius: 14px;
+}
+
+.table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--hw-muted);
+}
