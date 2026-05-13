@@ -9,70 +9,88 @@
 
         <form (ngSubmit)="save()" #f="ngForm" class="bg-white border rounded-3 p-4">
 
+            <!-- ── Dati annuncio ── -->
+            <h6 class="text-uppercase muted small mb-3">Dati annuncio</h6>
+
             <div class="mb-3">
                 <label class="form-label small text-uppercase muted">Titolo</label>
                 <input class="form-control" name="title" [(ngModel)]="model.title" required>
             </div>
 
-            <div class="row g-3">
+            <div class="row g-3 mb-4">
                 <div class="col-md-6">
-                    <label class="form-label small text-uppercase muted">Tipo</label>
+                    <label class="form-label small text-uppercase muted">Tipo transazione</label>
                     <select class="form-select" name="listingType" [(ngModel)]="model.listingType" required>
                         <option value="SALE">Vendita</option>
                         <option value="RENT">Affitto</option>
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label small text-uppercase muted">Categoria</label>
-                    <select class="form-select" name="category" [(ngModel)]="model.category" required>
-                        @for (c of categories; track c.value) {
-                            <option [value]="c.value">{{ c.label }}</option>
-                        }
-                    </select>
-                </div>
-
-                <div class="col-md-4">
                     <label class="form-label small text-uppercase muted">Prezzo (€)</label>
-                    <input type="number" class="form-control" name="price"
-                           [(ngModel)]="model.price" required>
+                    <input type="number" class="form-control" name="price" [(ngModel)]="model.price" required>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label small text-uppercase muted">Metri quadri</label>
-                    <input type="number" class="form-control" name="sqm"
-                           [(ngModel)]="model.squareMeters" required>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small text-uppercase muted">Città</label>
-                    <input class="form-control" name="city" [(ngModel)]="model.city" required>
-                </div>
-
                 <div class="col-12">
-                    <label class="form-label small text-uppercase muted">Indirizzo</label>
-                    <input class="form-control" name="address" [(ngModel)]="model.address" required>
+                    <label class="form-label small text-uppercase muted">Descrizione</label>
+                    <textarea class="form-control" rows="4" name="description"
+                              [(ngModel)]="model.description" required></textarea>
                 </div>
-
-                <div class="col-md-6">
-                    <label class="form-label small text-uppercase muted">Latitudine</label>
-                    <input type="number" step="0.0001" class="form-control" name="lat"
-                           [(ngModel)]="model.latitude">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label small text-uppercase muted">Longitudine</label>
-                    <input type="number" step="0.0001" class="form-control" name="lng"
-                           [(ngModel)]="model.longitude">
-                </div>
-
                 <div class="col-12">
                     <label class="form-label small text-uppercase muted">Foto (URL, una per riga)</label>
                     <textarea class="form-control" rows="3" name="photos"
                               [ngModel]="photosText"
                               (ngModelChange)="onPhotosChange($event)"></textarea>
                 </div>
+            </div>
 
-                <div class="col-12">
-                    <label class="form-label small text-uppercase muted">Descrizione</label>
-                    <textarea class="form-control" rows="5" name="description"
-                              [(ngModel)]="model.description" required></textarea>
+            <hr class="my-4">
+
+            <!-- ── Dati immobile ── -->
+            <h6 class="text-uppercase muted small mb-3">Dati immobile</h6>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <label class="form-label small text-uppercase muted">Tipo immobile</label>
+                    <select class="form-select" name="reType" [(ngModel)]="re.type" required>
+                        @for (c of categories; track c.value) {
+                            <option [value]="c.value">{{ c.label }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-uppercase muted">N° stanze</label>
+                    <input type="number" class="form-control" name="rooms" [(ngModel)]="re.numberOfRooms">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-uppercase muted">Superficie (m²)</label>
+                    <input type="number" class="form-control" name="sqm" [(ngModel)]="re.squareMetres" required>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- ── Posizione ── -->
+            <h6 class="text-uppercase muted small mb-3">Posizione</h6>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label small text-uppercase muted">Via</label>
+                    <input class="form-control" name="street" [(ngModel)]="re.street" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label small text-uppercase muted">N° civico</label>
+                    <input class="form-control" name="civic" [(ngModel)]="re.civicNumber" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small text-uppercase muted">Città</label>
+                    <input class="form-control" name="city" [(ngModel)]="re.city" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-uppercase muted">CAP</label>
+                    <input class="form-control" name="cap" [(ngModel)]="re.cap" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-uppercase muted">Provincia</label>
+                    <input class="form-control" name="province" [(ngModel)]="re.province" required>
                 </div>
             </div>
 

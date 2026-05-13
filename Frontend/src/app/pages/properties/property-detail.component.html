@@ -18,26 +18,50 @@
                     [src]="property()!.photos[0] || placeholder"
                     [alt]="property()!.title"
                     class="detail-photo rounded-3 mb-4 w-100"
-                    loading="lazy"
-                    width="900"
-                    height="420"
+                    loading="lazy" width="900" height="420"
             />
 
             <div class="row g-4">
+
+                <!-- Colonna sinistra: info -->
                 <div class="col-md-8">
                     <div class="d-flex gap-2 mb-3 flex-wrap">
                         <span class="hw-badge primary">{{ listingLabel() }}</span>
                         <span class="hw-badge">{{ catLabel() }}</span>
                         <span class="hw-badge">#{{ property()!.code }}</span>
                     </div>
+
                     <p>{{ property()!.description }}</p>
+
                     <p class="muted small">
                         <strong>Superficie:</strong> {{ property()!.squareMeters }} m²
-                        &nbsp;·&nbsp;
-                        <strong>Venditore:</strong> {{ property()!.sellerName }}
                     </p>
+
+                    <!-- Box venditore -->
+                    <div class="seller-box mt-4 p-3 border rounded-3 bg-white">
+                        <p class="small text-uppercase muted mb-2">Venditore</p>
+
+                        @if (seller()) {
+                            <p class="mb-1 fw-semibold">
+                                {{ seller()!.name }} {{ seller()!.surname }}
+                            </p>
+                            <p class="muted small mb-0">
+                                <i class="bi bi-envelope"></i> {{ seller()!.email }}
+                            </p>
+                        } @else {
+                            <p class="muted small mb-0">{{ property()!.sellerName }}</p>
+                        }
+
+                        <!-- Pulsante visibile SOLO agli utenti BUYER -->
+                        @if (authSvc.hasRole('BUYER')) {
+                            <button class="btn btn-hw-outline btn-sm mt-3" (click)="openModal()">
+                                <i class="bi bi-envelope me-2"></i>Contatta il venditore
+                            </button>
+                        }
+                    </div>
                 </div>
 
+                <!-- Colonna destra: prezzo -->
                 <div class="col-md-4">
                     <div class="price-box">
                         <p class="mb-1 muted small text-uppercase price-label">Prezzo</p>
@@ -54,7 +78,7 @@
                 </div>
             </div>
 
-            <!-- RECENSIONI -->
+            <!-- Recensioni -->
             <hr class="my-4" />
             <h3 class="serif mb-3">Recensioni</h3>
 
@@ -75,3 +99,50 @@
 
     </div>
 </section>
+
+<!-- ── Modale contatta venditore ── -->
+@if (showModal()) {
+    <div class="modal-backdrop" (click)="closeModal()"></div>
+    <div class="modal-box rounded-3 p-4 bg-white shadow-lg">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="serif mb-0">Contatta il venditore</h5>
+            <button class="btn-close" (click)="closeModal()" aria-label="Chiudi"></button>
+        </div>
+
+        @if (contactSent()) {
+            <div class="alert alert-success small">
+                Messaggio inviato! Il venditore ti risponderà via email.
+            </div>
+            <button class="btn btn-hw-outline btn-sm mt-2" (click)="closeModal()">Chiudi</button>
+
+        } @else {
+            <p class="small muted mb-3">
+                Scrivi un messaggio riguardo all'annuncio
+                <strong>{{ property()!.title }}</strong>.
+                Il venditore riceverà la tua email.
+            </p>
+
+            <div class="mb-3">
+                <label class="form-label small text-uppercase muted">Il tuo messaggio</label>
+                <textarea class="form-control" rows="5"
+                          [(ngModel)]="contactMsg"
+                          placeholder="Es: Sono interessato all'immobile, vorrei fissare una visita...">
+        </textarea>
+            </div>
+
+            @if (contactError()) {
+                <div class="alert alert-danger small py-2">{{ contactError() }}</div>
+            }
+
+            <div class="d-flex gap-2 justify-content-end">
+                <button class="btn btn-outline-secondary btn-sm" (click)="closeModal()">Annulla</button>
+                <button class="btn btn-hw-outline btn-sm"
+                        [disabled]="!contactMsg.trim() || sending()"
+                        (click)="sendContact()">
+                    {{ sending() ? 'Invio…' : 'Invia messaggio' }}
+                </button>
+            </div>
+        }
+    </div>
+}

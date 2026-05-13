@@ -88,4 +88,16 @@ public class SellerController {
         String token = authHeader.substring(7);
         return jwtUtil.extractEmail(token);
     }
+
+
+    @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        try {
+            SellerDto seller = sellerService.getSellerById(id);
+            return ResponseEntity.ok(seller);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
