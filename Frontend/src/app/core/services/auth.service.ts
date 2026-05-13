@@ -34,7 +34,8 @@ export class AuthService {
   }
 
   loginWithGoogle(): void {
-    window.location.href = `${environment.apiUrl}/oauth2/authorization/google`;
+    this.logout();
+    window.location.href = `${environment.backendUrl}/oauth2/authorization/google`;
   }
 
   handleOAuthCallback(token: string): Observable<User> {
