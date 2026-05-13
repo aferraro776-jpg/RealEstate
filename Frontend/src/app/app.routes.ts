@@ -61,10 +61,8 @@ export const routes: Routes = [
     loadComponent: () =>
         import('./pages/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),
   },
-  { path: 'oauth2/callback', component: OAuthCallbackComponent },
   {
-    path: '**',
-    loadComponent: () =>
-        import('./pages/not-found/not-found.component').then(m => m.NotFoundComponent),
-  },
+    path: 'oauth2/callback',
+    component: OAuthCallbackComponent
+  }
 ];
