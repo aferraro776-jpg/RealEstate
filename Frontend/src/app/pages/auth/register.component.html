@@ -55,8 +55,8 @@
                            [(ngModel)]="password" required minlength="8">
                     <button type="button" class="btn btn-outline-secondary"
                             (click)="showPassword.set(!showPassword())"
-                            aria-label="Mostra/nascondi password">
-                        <img [src]="showPassword() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
+                            [attr.aria-label]="showPassword() ? 'Nascondi password' : 'Mostra password'">
+                        <img [src]="showPassword() ? 'assets/icons/eyeOn.png' : 'assets/icons/eyeOff.png'"
                              width="20" height="20" alt="">
                     </button>
                 </div>
@@ -75,8 +75,8 @@
                            [(ngModel)]="confirmPassword" required>
                     <button type="button" class="btn btn-outline-secondary"
                             (click)="showConfirm.set(!showConfirm())"
-                            aria-label="Mostra/nascondi conferma">
-                        <img [src]="showConfirm() ? 'assets/icone/eye.png' : 'assets/icone/show.png'"
+                            [attr.aria-label]="showConfirm() ? 'Nascondi conferma' : 'Mostra conferma'">
+                        <img [src]="showConfirm() ? 'assets/icons/eyeOn.png' : 'assets/icons/eyeOff.png'"
                              width="20" height="20" alt="">
                     </button>
                 </div>

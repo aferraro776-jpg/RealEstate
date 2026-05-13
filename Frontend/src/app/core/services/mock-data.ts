@@ -11,7 +11,7 @@ export const MOCK_PROPERTIES: Property[] = [
   {
     id: 1, code: 'A001',
     title: 'Appartamento luminoso al Parioli',
-    description: 'Splendido trilocale al quinto piano con ascensore, doppi servizi, terrazzo vivibile con vista sulla città. Recentemente ristrutturato con finiture di pregio.',
+    description: 'Splendido trilocale al quinto piano con ascensore, doppi servizi, terrazzo vivibile con vista sulla città.',
     category: 'APARTMENT', listingType: 'SALE',
     price: 265000, oldPrice: 285000,
     squareMeters: 95, address: 'Via Salaria 42', city: 'Roma',
@@ -22,7 +22,7 @@ export const MOCK_PROPERTIES: Property[] = [
   {
     id: 2, code: 'A002',
     title: 'Loft moderno in Brera',
-    description: 'Loft open space di design nel cuore di Brera. Soffitti alti 4m, mattoni a vista, cucina isola, pavimento in cemento levigato.',
+    description: 'Loft open space di design nel cuore di Brera. Soffitti alti 4m, mattoni a vista.',
     category: 'APARTMENT', listingType: 'RENT',
     price: 1800,
     squareMeters: 72, address: 'Via Fiori Chiari 18', city: 'Milano',
@@ -33,7 +33,7 @@ export const MOCK_PROPERTIES: Property[] = [
   {
     id: 3, code: 'V001',
     title: 'Villa con giardino in Chianti',
-    description: 'Magnifica villa storica immersa nei vigneti del Chianti. 5 camere, piscina, dependance, uliveto privato.',
+    description: 'Magnifica villa storica immersa nei vigneti del Chianti. 5 camere, piscina, dependance.',
     category: 'VILLA', listingType: 'SALE',
     price: 890000,
     squareMeters: 340, address: 'Via del Poggio 7', city: 'Firenze',
@@ -44,7 +44,7 @@ export const MOCK_PROPERTIES: Property[] = [
   {
     id: 4, code: 'A003',
     title: 'Trilocale ristrutturato San Salvario',
-    description: 'Trilocale completamente rinnovato nel vivace quartiere San Salvario. Parquet, infissi nuovi, cucina moderna arredata.',
+    description: 'Trilocale completamente rinnovato nel vivace quartiere San Salvario. Parquet, infissi nuovi.',
     category: 'APARTMENT', listingType: 'RENT',
     price: 950,
     squareMeters: 88, address: 'Corso Marconi 55', city: 'Torino',
@@ -77,7 +77,7 @@ export const MOCK_PROPERTIES: Property[] = [
   {
     id: 7, code: 'V002',
     title: "Masseria ristrutturata Valle d'Itria",
-    description: "Antica masseria pugliese sapientemente restaurata. Trulli annessi, giardino mediterraneo, piscina a sfioro.",
+    description: "Antica masseria pugliese sapientemente restaurata. Trulli annessi, giardino mediterraneo.",
     category: 'VILLA', listingType: 'SALE',
     price: 580000,
     squareMeters: 210, address: 'Contrada Mitrano', city: 'Alberobello',
@@ -100,6 +100,8 @@ export const MOCK_PROPERTIES: Property[] = [
 
 export const MOCK_REVIEWS: Review[] = [
   { id: 1, propertyId: 1, buyerId: 3, buyerName: 'Giulia Bianchi', rating: 5, comment: 'Annuncio accurato, venditore disponibile.', createdAt: '2026-03-01T10:00:00Z' },
-  { id: 2, propertyId: 1, buyerId: 4, buyerName: 'Luca Spam',      rating: 4, comment: 'Bella zona, prezzo onesto per i Parioli.', createdAt: '2026-03-05T14:00:00Z' },
+  { id: 2, propertyId: 1, buyerId: 4, buyerName: 'Luca Spam',      rating: 4, comment: 'Bella zona, prezzo onesto per i Parioli.',  createdAt: '2026-03-05T14:00:00Z' },
   { id: 3, propertyId: 2, buyerId: 3, buyerName: 'Giulia Bianchi', rating: 5, comment: 'Loft fantastico, esattamente quello che cercavo.', createdAt: '2026-03-10T09:00:00Z' },
 ];
+
+export const MOCK_AUCTIONS: Auction[] = [];

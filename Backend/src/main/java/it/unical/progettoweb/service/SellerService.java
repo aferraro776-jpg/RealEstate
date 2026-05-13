@@ -110,4 +110,10 @@ public class SellerService {
                 "SELLER"
         );
     }
+
+    public SellerDto getSellerById(int id) {
+        Seller seller = sellerDao.get(id)
+                .orElseThrow(() -> new RuntimeException("Venditore non trovato"));
+        return toDto(seller);
+    }
 }
