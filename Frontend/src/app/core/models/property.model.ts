@@ -19,6 +19,17 @@ export interface RealEstateRequest {
     city: string;
     cap: string;
     province: string;
+    floor?: number;
+    hasElevator?: boolean;
+    hasGarden?: boolean;
+    hasPool?: boolean;
+    numberOfFloors?: number;
+    width?: number;
+    height?: number;
+    isElectric?: boolean;
+    cubature?: number;
+    plannedUse?: string;
+    cropType?: string;
 }
 
 export interface PostCreateDto {

@@ -26,7 +26,7 @@ public class GarageDao implements RealEstateDao<Garage> {
             realEstateRowMapper.mapCommon(g, rs);
             g.setWidth(rs.getDouble("width"));
             g.setHeight(rs.getDouble("height"));
-            g.setIsElectric(rs.getBoolean("isElectric"));
+            g.setIsElectric(rs.getBoolean("is_electric"));
             return g;
         };
     }
@@ -34,7 +34,7 @@ public class GarageDao implements RealEstateDao<Garage> {
     @Override
     public Garage save(Garage g) {
         jdbcTemplate.update(
-                "INSERT INTO real_estate (id, title, description, squareMetres, latit, longit, address, createdAt, type, width, height, isElectric) " +
+                "INSERT INTO real_estate (id, title, description, square_metres, latit, longit, address, created_at, type, width, height, is_electric) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 'GARAGE', ?, ?, ?)",
                 g.getId(), g.getTitle(), g.getDescription(), g.getSquareMetres(),
                 g.getLatit(), g.getLongit(), g.getAddress(),
