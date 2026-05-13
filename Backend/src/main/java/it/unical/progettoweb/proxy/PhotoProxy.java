@@ -22,7 +22,7 @@ public class PhotoProxy implements PhotoCollection {
     @Override
     public List<Photo> getPhotos() {
         if (realPhotoList == null) {
-            String sql = "SELECT * FROM photos WHERE \"postId\" = ? ORDER BY id";
+            String sql = "SELECT * FROM photos WHERE post_id = ? ORDER BY id";
             List<Photo> photosFromDb = jdbcTemplate.query(sql, photoRowMapper, postId);
             realPhotoList = new PhotoList(photosFromDb);
         }

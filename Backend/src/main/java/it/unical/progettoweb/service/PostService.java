@@ -1,12 +1,15 @@
 package it.unical.progettoweb.service;
 
 import it.unical.progettoweb.dao.PostDao;
+import it.unical.progettoweb.dao.ReviewDao;
+import it.unical.progettoweb.dao.impl.PhotoDaoImpl;
 import it.unical.progettoweb.dto.request.PostRequest;
 import it.unical.progettoweb.dto.request.PostWithRealEstateCreateDto;
 import it.unical.progettoweb.dto.response.PostDto;
 import it.unical.progettoweb.dto.response.RealEstateDto;
 import it.unical.progettoweb.model.Photo;
 import it.unical.progettoweb.model.Post;
+import it.unical.progettoweb.proxy.PostProxy;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,8 @@ public class PostService {
     private final PostDao postDao;
     private final RealEstateService realEstateService;
     private final TelegramService telegramService;
+    private final ReviewDao reviewDao;
+    private final PhotoDaoImpl photoDao;
 
     public PostDto save(PostRequest postDto, int sellerId) {
         return buildAndSavePost(
@@ -100,8 +105,12 @@ public class PostService {
     }
 
     private PostDto toDto(Post post) {
-        return new PostDto(post.getId(), post.getTitle(), post.getDescription(), post.getPreviousPrice(),
-                post.getCurrentPrice(), post.getCreatedAt(), post.getSellerId(), post.getRealEstateId(),post.getPhotos() );
+        return new PostDto(
+                post.getId(), post.getTitle(), post.getDescription(),
+                post.getPreviousPrice(), post.getCurrentPrice(),
+                post.getCreatedAt(), post.getSellerId(),
+                post.getRealEstateId(), post.getPhotos()
+        );
     }
 
     public PostDto update(int id, PostRequest postDto,int postId) {
@@ -172,7 +181,19 @@ public class PostService {
             throw new RuntimeException("Post non trovato");
         }
 
-        return toDto(existing.get());
+        Post post = existing.get();
+
+        PostProxy proxy = new PostProxy(photoDao, reviewDao);
+        proxy.setId(post.getId());
+        proxy.setTitle(post.getTitle());
+        proxy.setDescription(post.getDescription());
+        proxy.setPreviousPrice(post.getPreviousPrice());
+        proxy.setCurrentPrice(post.getCurrentPrice());
+        proxy.setCreatedAt(post.getCreatedAt());
+        proxy.setSellerId(post.getSellerId());
+        proxy.setRealEstateId(post.getRealEstateId());
+
+        return toDto(proxy);
     }
 
     public List<PostDto> getBySellerId(int sellerId) {
