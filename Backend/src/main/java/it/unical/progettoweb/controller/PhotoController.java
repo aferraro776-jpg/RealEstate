@@ -20,7 +20,7 @@ public class PhotoController {
     private final CloudflareR2Service r2Service;
 
     public PhotoController(PhotoDaoImpl photoDao, CloudflareR2Service r2Service) {
-        this.photoDao = (PhotoDao) photoDao;
+        this.photoDao = photoDao;
         this.r2Service = r2Service;
     }
 
@@ -38,7 +38,7 @@ public class PhotoController {
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<String> uploadAndCreate(
+    public ResponseEntity<?> uploadAndCreate(
             @RequestParam("file") MultipartFile file,
             @RequestParam("postId") int postId) {
 
@@ -52,7 +52,7 @@ public class PhotoController {
 
             photoDao.save(photo);
 
-            return ResponseEntity.ok("Photo uploaded and created successfully");
+            return ResponseEntity.ok(photo);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Errore durante l'upload: " + e.getMessage());
