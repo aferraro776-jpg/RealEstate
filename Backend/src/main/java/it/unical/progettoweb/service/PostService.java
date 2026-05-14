@@ -170,6 +170,8 @@ public class PostService {
         }
         List<PostDto> result = new ArrayList<>();
         for (Post p : posts) {
+            List<Photo> photos = photoDao.getPhotoCollectionForPost(p.getId()).getPhotos();
+            p.setPhotos(photos);
             result.add(toDto(p));
         }
         return result;
@@ -206,6 +208,8 @@ public class PostService {
 
         List<PostDto> result = new ArrayList<>();
         for (Post p : posts) {
+            List<Photo> photos = photoDao.getPhotoCollectionForPost(p.getId()).getPhotos();
+            p.setPhotos(photos);
             result.add(toDto(p));
         }
         return result;

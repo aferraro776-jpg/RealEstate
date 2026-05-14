@@ -21,4 +21,8 @@ export class PropertyCardComponent {
   protected get listingLabel(): string {
     return LISTING_TYPE_LABELS[this.property.listingType] ?? this.property.listingType;
   }
+
+  ngOnInit() {
+    console.log('photos:', this.property.photos);
+  }
 }
