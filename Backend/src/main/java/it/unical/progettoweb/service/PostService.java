@@ -113,7 +113,7 @@ public class PostService {
         );
     }
 
-    public PostDto update(int id, PostRequest postDto,int postId) {
+    public PostDto update(int id, PostRequest postDto, int sellerId) {
         Optional<Post> existing = postDao.get(id);
 
         if (existing.isEmpty()) {
@@ -122,6 +122,10 @@ public class PostService {
 
         Post post = existing.get();
 
+        if (sellerId != post.getSellerId()) {
+            throw new RuntimeException("Non puoi modificare un post di un altro venditore");
+        }
+
         post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
         post.setCurrentPrice(postDto.getCurrentPrice());
@@ -129,9 +133,6 @@ public class PostService {
         post.setRealEstateId(postDto.getRealEstateId());
 
         Post saved = postDao.update(post);
-        if(postId != saved.getId()){
-            throw new RuntimeException("Non puoi modificare un post di un altro venditore");
-        }
         return toDto(saved);
     }
 
