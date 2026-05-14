@@ -10,11 +10,12 @@ export interface PhotoResponse {
 @Injectable({ providedIn: 'root' })
 export class PhotoService {
     private http = inject(HttpClient);
-    private base = `${environment.apiUrl}/api/photos`;
+    private base = `${environment.apiUrl}/photos`;
 
-    upload(file: File): Observable<PhotoResponse> {
+    upload(file: File, postId: number): Observable<PhotoResponse> {
         const fd = new FormData();
         fd.append('file', file);
-        return this.http.post<PhotoResponse>(`${this.base}/upload`, fd);
+        fd.append('postId', String(postId));
+        return this.http.post<PhotoResponse>(this.base, fd);
     }
 }

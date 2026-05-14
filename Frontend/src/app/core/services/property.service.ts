@@ -4,7 +4,7 @@ import { Observable, switchMap, forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   Post, PostCreateDto,
-  Property, RealEstateDto, PropertyFilters,
+  Property, RealEstateDto, PropertyFilters, RealEstateRequest,
 } from '../models';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
@@ -14,11 +14,9 @@ function toProperty(raw: any, re?: any): Property {
   let address = re?.address ?? '';
 
   if (re?.address) {
-
     const parts = re.address.split(',');
     if (parts.length >= 2) {
       const secondPart = parts[1].trim();
-
       const cityMatch = secondPart.match(/^\d+\s+(.+?)\s*\(.*\)$/);
       city = cityMatch ? cityMatch[1].trim() : secondPart;
     }
@@ -54,7 +52,6 @@ export class PropertyService {
   private base   = `${environment.apiUrl}/posts`;
   private reBase = `${environment.apiUrl}/realestate`;
 
-  // Per ogni post carica il RealEstate corrispondente e unisce i dati
   private enrichPosts(posts: any[]): Observable<Property[]> {
     if (!posts.length) return of([]);
     return forkJoin(
@@ -92,7 +89,6 @@ export class PropertyService {
     );
   }
 
-  // CORREZIONE: /posts/mine non esiste nel backend → usa /posts/seller/{id}
   mine(): Observable<Property[]> {
     const user = this.auth.user();
     if (!user) return of([]);
@@ -109,6 +105,10 @@ export class PropertyService {
 
   getRealEstate(id: number): Observable<RealEstateDto> {
     return this.http.get<RealEstateDto>(`${this.reBase}/${id}`);
+  }
+
+  updateRealEstate(id: number, data: RealEstateRequest): Observable<RealEstateDto> {
+    return this.http.patch<RealEstateDto>(`${this.reBase}/${id}`, data);
   }
 
   createWithRealEstate(dto: PostCreateDto): Observable<Post> {
