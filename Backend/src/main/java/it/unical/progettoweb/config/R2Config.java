@@ -25,7 +25,7 @@ public class R2Config {
     @Bean
     public S3Client s3Client() {
         return S3Client.builder()
-                .region(Region.EU_WEST_1)
+                .region(Region.of("auto"))
                 .endpointOverride(URI.create(endpoint))
                 .credentialsProvider(StaticCredentialsProvider.create(
                         AwsBasicCredentials.create(accessKey, secretKey)
