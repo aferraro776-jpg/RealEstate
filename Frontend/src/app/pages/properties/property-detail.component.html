@@ -14,12 +14,35 @@
                 {{ property()!.city }} — {{ property()!.address }}
             </p>
 
-            <img
-                    [src]="property()!.photos[0] || placeholder"
-                    [alt]="property()!.title"
-                    class="detail-photo rounded-3 mb-4 w-100"
-                    loading="lazy" width="900" height="420"
-            />
+            @if (property()!.photos.length > 0) {
+                <div class="carousel-wrap mb-4">
+                    <img [src]="property()!.photos[currentPhoto()]"
+                         [alt]="property()!.title"
+                         class="carousel-img"
+                         loading="lazy" />
+
+                    @if (property()!.photos.length > 1) {
+                        <button class="carousel-btn prev" (click)="prevPhoto()" aria-label="Precedente">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <button class="carousel-btn next" (click)="nextPhoto()" aria-label="Successiva">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+
+                        <div class="carousel-dots">
+                            @for (ph of property()!.photos; track $index) {
+                                <span class="dot" [class.active]="$index === currentPhoto()"
+                                      (click)="goToPhoto($index)"></span>
+                            }
+                        </div>
+                    }
+                </div>
+
+            } @else {
+                <img [src]="placeholder" [alt]="property()!.title"
+                     class="detail-photo rounded-3 mb-4 w-100"
+                     loading="lazy" width="900" height="420" />
+            }
 
             <div class="row g-4">
 

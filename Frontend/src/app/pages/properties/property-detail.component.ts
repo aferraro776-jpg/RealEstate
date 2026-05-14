@@ -36,7 +36,7 @@ export class PropertyDetailComponent implements OnInit {
   loading     = signal(true);
   seller      = signal<SellerInfo | null>(null);
   placeholder = 'https://placehold.co/900x420/eee/999?text=hw26';
-
+  currentPhoto = signal(0);
   showModal    = signal(false);
   contactMsg   = '';
   contactSent  = signal(false);
@@ -72,6 +72,20 @@ export class PropertyDetailComponent implements OnInit {
   }
 
   closeModal(): void { this.showModal.set(false); }
+
+  prevPhoto(): void {
+    const photos = this.property()?.photos ?? [];
+    this.currentPhoto.update(i => (i - 1 + photos.length) % photos.length);
+  }
+
+  nextPhoto(): void {
+    const photos = this.property()?.photos ?? [];
+    this.currentPhoto.update(i => (i + 1) % photos.length);
+  }
+
+  goToPhoto(index: number): void {
+    this.currentPhoto.set(index);
+  }
 
   sendContact(): void {
     const user = this.authSvc.user();
