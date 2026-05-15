@@ -128,6 +128,7 @@ public class PostService {
 
         post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
+        post.setPreviousPrice(post.getCurrentPrice());
         post.setCurrentPrice(postDto.getCurrentPrice());
         post.setPhotos(postDto.getPhotoUrls());
         post.setRealEstateId(postDto.getRealEstateId());
