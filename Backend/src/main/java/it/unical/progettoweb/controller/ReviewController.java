@@ -3,7 +3,7 @@ package it.unical.progettoweb.controller;
 import it.unical.progettoweb.dto.request.ReviewRequest;
 import it.unical.progettoweb.dto.response.ReviewDto;
 import it.unical.progettoweb.service.JwtUtil;
-import it.unical.progettoweb.service.ReviewsService;
+import it.unical.progettoweb.service.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class ReviewController {
 
-    private final ReviewsService reviewsService;
+    private final ReviewService reviewsService;
     private final JwtUtil jwtUtil;
 
     @PostMapping

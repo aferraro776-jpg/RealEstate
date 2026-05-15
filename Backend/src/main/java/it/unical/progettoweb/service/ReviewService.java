@@ -2,6 +2,7 @@ package it.unical.progettoweb.service;
 
 import it.unical.progettoweb.dao.PostDao;
 import it.unical.progettoweb.dao.ReviewDao;
+import it.unical.progettoweb.dao.impl.UserDao;
 import it.unical.progettoweb.dto.request.ReviewRequest;
 import it.unical.progettoweb.dto.response.ReviewDto;
 import it.unical.progettoweb.model.Review;
@@ -13,10 +14,11 @@ import java.util.Random;
 
 @Service
 @AllArgsConstructor
-public class ReviewsService {
+public class ReviewService {
 
     private final ReviewDao reviewDao;
     private final PostDao postDao;
+    private final UserDao userDao;
 
     public ReviewDto create(ReviewRequest request, int userId){
         postDao.get(request.getPostId()).orElseThrow(()-> new RuntimeException("Post not found"));
@@ -87,7 +89,10 @@ public class ReviewsService {
         return id;
     }
     private ReviewDto toDto(Review r) {
-        return new ReviewDto(r.getId(), r.getTitle(), r.getDescription(),
+        String buyerName = userDao.get(r.getUserId())
+                .map(user -> user.getName() + " " + user.getSurname())
+                .orElse("Utente Sconosciuto");
+        return new ReviewDto(r.getId(), r.getTitle(), r.getDescription(),buyerName,
                 r.getRating(), r.getCreatedAt(), r.getUserId(), r.getPostId());
     }
 

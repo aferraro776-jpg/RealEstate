@@ -99,9 +99,36 @@ export const MOCK_PROPERTIES: Property[] = [
 ];
 
 export const MOCK_REVIEWS: Review[] = [
-  { id: 1, propertyId: 1, buyerId: 3, buyerName: 'Giulia Bianchi', rating: 5, comment: 'Annuncio accurato, venditore disponibile.', createdAt: '2026-03-01T10:00:00Z' },
-  { id: 2, propertyId: 1, buyerId: 4, buyerName: 'Luca Spam',      rating: 4, comment: 'Bella zona, prezzo onesto per i Parioli.',  createdAt: '2026-03-05T14:00:00Z' },
-  { id: 3, propertyId: 2, buyerId: 3, buyerName: 'Giulia Bianchi', rating: 5, comment: 'Loft fantastico, esattamente quello che cercavo.', createdAt: '2026-03-10T09:00:00Z' },
+  {
+    id: 1,
+    postId: 1,
+    userId: 3,
+    author: 'Giulia Bianchi',
+    title: 'Ottimo annuncio',
+    rating: 5,
+    description: 'Annuncio accurato, venditore disponibile.',
+    createdAt: '2026-03-01T10:00:00Z',
+  },
+  {
+    id: 2,
+    postId: 1,
+    userId: 4,
+    author: 'Luca Spam',
+    title: 'Buona posizione',
+    rating: 4,
+    description: 'Bella zona, prezzo onesto per i Parioli.',
+    createdAt: '2026-03-05T14:00:00Z',
+  },
+  {
+    id: 3,
+    postId: 2,
+    userId: 3,
+    author: 'Giulia Bianchi',
+    title: 'Perfetto per me',
+    rating: 5,
+    description: 'Loft fantastico, esattamente quello che cercavo.',
+    createdAt: '2026-03-10T09:00:00Z',
+  },
 ];
 
 export const MOCK_AUCTIONS: Auction[] = [];

@@ -1,9 +1,10 @@
 export interface Review {
     id: number;
-    propertyId: number;
-    buyerId: number;
-    buyerName: string;
+    postId: number;
+    userId: number;
+    author: string;
     rating: number;
-    comment: string;
+    description: string;
     createdAt: string;
+    title: string
 }

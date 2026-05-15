@@ -10,7 +10,7 @@ export class ReviewService {
   private base = `${environment.apiUrl}/reviews`;
 
   list(propertyId: number): Observable<Review[]> {
-    return this.http.get<Review[]>(`${this.base}/property/${propertyId}`);
+    return this.http.get<Review[]>(`${this.base}/post/${propertyId}`);
   }
 
   create(r: Omit<Review, 'id' | 'createdAt'>): Observable<Review> {

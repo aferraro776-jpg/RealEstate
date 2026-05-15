@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -14,8 +13,9 @@ public class ReviewDto {
     private int id;
     private String title;
     private String description;
+    private String author;
     private int rating;
-    private LocalDateTime date;
+    private LocalDateTime createdAt;
     private int userId;
     private int postId;
 }

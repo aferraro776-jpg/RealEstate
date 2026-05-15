@@ -116,10 +116,11 @@
                 @for (r of reviews(); track r.id) {
                     <div class="review-card mb-3">
                         <div class="d-flex justify-content-between mb-1">
-                            <strong>{{ r.buyerName }}</strong>
+                            <strong>{{ r.author }}</strong>
                             <span class="muted small">{{ r.rating }}/5 ★</span>
                         </div>
-                        <p class="mb-0 small">{{ r.comment }}</p>
+                        <p class="mb-1 small fw-semibold">{{ r.title }}</p>
+                        <p class="mb-0 small">{{ r.description }}</p>
                     </div>
                 }
             }
