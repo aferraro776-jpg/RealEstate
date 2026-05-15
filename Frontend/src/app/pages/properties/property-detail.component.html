@@ -31,7 +31,8 @@
 
                         <div class="carousel-dots">
                             @for (ph of property()!.photos; track $index) {
-                                <span class="dot" [class.active]="$index === currentPhoto()"
+                                <span class="dot"
+                                      [class.active]="$index === currentPhoto()"
                                       (click)="goToPhoto($index)"></span>
                             }
                         </div>
@@ -39,9 +40,12 @@
                 </div>
 
             } @else {
-                <img [src]="placeholder" [alt]="property()!.title"
+                <img [src]="placeholder"
+                     [alt]="property()!.title"
                      class="detail-photo rounded-3 mb-4 w-100"
-                     loading="lazy" width="900" height="420" />
+                     loading="lazy"
+                     width="900"
+                     height="420" />
             }
 
             <div class="row g-4">
@@ -108,19 +112,79 @@
             </div>
 
             <hr class="my-4" />
-            <h3 class="serif mb-3">Recensioni</h3>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="serif mb-0">Recensioni</h3>
+                @if (authSvc.hasRole('BUYER')) {
+                    <button class="btn btn-hw-outline btn-sm" (click)="openReviewForm()">
+                        <i class="bi bi-plus-lg me-1"></i>Scrivi una recensione
+                    </button>
+                }
+            </div>
 
             @if (reviews().length === 0) {
                 <p class="muted">Nessuna recensione ancora.</p>
             } @else {
                 @for (r of reviews(); track r.id) {
                     <div class="review-card mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <strong>{{ r.author }}</strong>
-                            <span class="muted small">{{ r.rating }}/5 ★</span>
-                        </div>
-                        <p class="mb-1 small fw-semibold">{{ r.title }}</p>
-                        <p class="mb-0 small">{{ r.description }}</p>
+
+                        @if (editingReviewId() === r.id) {
+                            <div class="d-flex flex-column gap-2">
+                                <div>
+                                    <label class="form-label small text-uppercase muted">Titolo</label>
+                                    <input type="text"
+                                           class="form-control form-control-sm"
+                                           [ngModel]="editTitle()"
+                                           (ngModelChange)="editTitle.set($event)" />
+                                </div>
+
+                                <div>
+                                    <label class="form-label small text-uppercase muted">Voto</label>
+                                    <select class="form-select form-select-sm"
+                                            [ngModel]="editRating()"
+                                            (ngModelChange)="editRating.set($event)">
+                                        @for (n of [1,2,3,4,5]; track n) {
+                                            <option [value]="n">{{ n }} ★</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="form-label small text-uppercase muted">Descrizione</label>
+                                    <textarea class="form-control form-control-sm"
+                                              rows="3"
+                                              [ngModel]="editComment()"
+                                              (ngModelChange)="editComment.set($event)"></textarea>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-hw-outline btn-sm" (click)="saveEdit(r)">
+                                        <i class="bi bi-check-lg me-1"></i>Salva
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm" (click)="cancelEdit()">
+                                        Annulla
+                                    </button>
+                                </div>
+                            </div>
+
+                        } @else {
+                            <div class="d-flex justify-content-between mb-1">
+                                <strong>{{ r.author }}</strong>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="muted small">{{ r.rating }}/5 ★</span>
+                                    @if (isReviewAuthor(r)) {
+                                        <button class="btn btn-outline-secondary btn-sm py-0 px-2"
+                                                (click)="startEdit(r)"
+                                                aria-label="Modifica recensione">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            <p class="mb-1 fw-semibold small">{{ r.title }}</p>
+                            <p class="mb-0 small">{{ r.description }}</p>
+                        }
+
                     </div>
                 }
             }
@@ -153,10 +217,10 @@
 
             <div class="mb-3">
                 <label class="form-label small text-uppercase muted">Il tuo messaggio</label>
-                <textarea class="form-control" rows="5"
+                <textarea class="form-control"
+                          rows="5"
                           [(ngModel)]="contactMsg"
-                          placeholder="Es: Sono interessato all'immobile, vorrei fissare una visita...">
-                </textarea>
+                          placeholder="Es: Sono interessato all'immobile, vorrei fissare una visita..."></textarea>
             </div>
 
             @if (contactError()) {
@@ -172,5 +236,68 @@
                 </button>
             </div>
         }
+    </div>
+}
+
+@if (showReviewForm()) {
+    <div class="modal-backdrop" (click)="closeReviewForm()"></div>
+
+    <div class="modal-box-wrapper">
+        <div class="modal-box rounded-3 p-4 bg-white shadow-lg" (click)="$event.stopPropagation()">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="serif mb-0">Scrivi una recensione</h5>
+                <button class="btn-close" (click)="closeReviewForm()" aria-label="Chiudi"></button>
+            </div>
+
+            <div class="d-flex flex-column gap-3">
+                <div>
+                    <label class="form-label small text-uppercase muted">Titolo</label>
+                    <input type="text"
+                           class="form-control"
+                           [ngModel]="newTitle()"
+                           (ngModelChange)="newTitle.set($event)"
+                           placeholder="Es: Ottimo appartamento" />
+                </div>
+
+                <div>
+                    <label class="form-label small text-uppercase muted">Voto</label>
+                    <select class="form-select"
+                            [ngModel]="newRating()"
+                            (ngModelChange)="newRating.set($event)">
+                        @for (n of [1,2,3,4,5]; track n) {
+                            <option [value]="n">{{ n }} ★</option>
+                        }
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label small text-uppercase muted">Descrizione</label>
+                    <textarea class="form-control"
+                              rows="4"
+                              [ngModel]="newComment()"
+                              (ngModelChange)="newComment.set($event)"
+                              placeholder="Descrivi la tua esperienza…"></textarea>
+                </div>
+            </div>
+
+            @if (reviewError()) {
+                <div class="alert alert-danger small py-2 mt-3">
+                    {{ reviewError() }}
+                </div>
+            }
+
+            <div class="d-flex gap-2 justify-content-end mt-3">
+                <button class="btn btn-outline-secondary btn-sm" (click)="closeReviewForm()">
+                    Annulla
+                </button>
+                <button class="btn btn-hw-outline btn-sm"
+                        [disabled]="!newTitle().trim() || !newComment().trim() || savingReview()"
+                        (click)="submitReview()">
+                    {{ savingReview() ? 'Salvataggio…' : 'Pubblica recensione' }}
+                </button>
+            </div>
+
+        </div>
     </div>
 }

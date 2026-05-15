@@ -16,4 +16,7 @@ export class ReviewService {
   create(r: Omit<Review, 'id' | 'createdAt'>): Observable<Review> {
     return this.http.post<Review>(this.base, r);
   }
+  update(r: Review): Observable<Review> {
+    return this.http.put<Review>(`${this.base}/${r.id}`, r);
+  }
 }

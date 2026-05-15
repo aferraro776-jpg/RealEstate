@@ -45,6 +45,16 @@ export class PropertyDetailComponent implements OnInit {
   contactSent  = signal(false);
   contactError = signal<string | null>(null);
   sending      = signal(false);
+  showReviewForm  = signal(false);
+  newTitle        = signal<string>('');
+  newRating       = signal<number>(5);
+  newComment      = signal<string>('');
+  reviewError     = signal<string | null>(null);
+  savingReview    = signal(false);
+  editTitle = signal<string>('');
+  editingReviewId = signal<number | null>(null);
+  editRating      = signal<number>(5);
+  editComment     = signal<string>('');
 
   catLabel     = () => { const p = this.property(); return p ? CATEGORY_LABELS[p.category] : ''; };
   listingLabel = () => { const p = this.property(); return p ? LISTING_TYPE_LABELS[p.listingType] : ''; };
@@ -116,6 +126,74 @@ export class PropertyDetailComponent implements OnInit {
         this.contactError.set(err?.error ?? 'Errore durante l\'invio.');
         this.sending.set(false);
       },
+    });
+  }
+  openReviewForm(): void {
+    this.showReviewForm.set(true);
+    this.newTitle.set('');
+    this.newRating.set(5);
+    this.newComment.set('');
+    this.reviewError.set(null);
+  }
+
+  closeReviewForm(): void { this.showReviewForm.set(false); }
+
+  submitReview(): void {
+    const user = this.authSvc.user();
+    const p    = this.property();
+    if (!user || !p) return;
+
+    this.savingReview.set(true);
+    this.reviewError.set(null);
+
+    this.revSvc.create({
+      postId:      p.id,
+      userId:      user.id,
+      author:      `${user.name} ${user.surname}`,
+      title:       this.newTitle(),
+      rating:      this.newRating(),
+      description: this.newComment(),
+    }).subscribe({
+      next: (r) => {
+        this.reviews.update(list => [r, ...list]);
+        this.savingReview.set(false);
+        this.showReviewForm.set(false);
+      },
+      error: (err) => {
+        this.reviewError.set(err?.error ?? 'Errore durante il salvataggio.');
+        this.savingReview.set(false);
+      },
+    });
+  }
+  isReviewAuthor(review: Review): boolean {
+    const user = this.authSvc.user();
+    return !!user && user.id === review.userId;
+  }
+
+  startEdit(review: Review): void {
+    this.editingReviewId.set(review.id);
+    this.editRating.set(review.rating);
+    this.editComment.set(review.description);
+    this.editTitle.set(review.title);
+  }
+
+  cancelEdit(): void {
+    this.editingReviewId.set(null);
+  }
+
+  saveEdit(review: Review): void {
+    const updated: Review = {
+      ...review,
+      rating:  this.editRating(),
+      title: this.editTitle(),
+      description: this.editComment(),
+    };
+    this.revSvc.update(updated).subscribe({
+      next: (r) => {
+        this.reviews.update(list => list.map(x => x.id === r.id ? r : x));
+        this.editingReviewId.set(null);
+      },
+      error: (err) => console.error('Errore aggiornamento recensione', err),
     });
   }
 }

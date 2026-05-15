@@ -31,7 +31,6 @@
     padding: 0.85rem 1rem;
 }
 
-/* Pulsante contatta venditore — verde coerente con l'app */
 .btn-contact {
     background-color: #01696f;
     color: #fff;
@@ -45,25 +44,28 @@
 .btn-contact:active { background-color: #0f3638; }
 .btn-contact:disabled { opacity: 0.6; cursor: not-allowed; }
 
-/* Modale */
+
 .modal-backdrop {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.35);
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
     z-index: 1000;
 }
+
 .modal-box {
     position: fixed;
-    top: 50%; left: 50%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    width: min(520px, 92vw);
     z-index: 1001;
+    width: 100%;
+    max-width: 480px;
 }
 
 .seller-box {
     border-color: #dcd9d5 !important;
 }
 
-/* Modale */
 .modal-backdrop {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.35);
