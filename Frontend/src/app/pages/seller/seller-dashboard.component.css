@@ -1,13 +1,27 @@
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-    border: 1px dashed var(--hw-border);
-    border-radius: 14px;
+.auction-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
 }
 
-.table th {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--hw-muted);
+.auction-live-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: #d4f4e4;
+    color: #1a6640;
+    width: fit-content;
+}
+
+.auction-live-badge.closed {
+    background: #f0e0e0;
+    color: #8b2020;
+}
+
+.auction-best {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #01696f;
 }

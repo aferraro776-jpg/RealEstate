@@ -7,6 +7,7 @@ import { PropertyService } from '../../core/services/property.service';
 import { ReviewService } from '../../core/services/review.service';
 import { ContactService } from '../../core/services/contact.service';
 import { AuthService } from '../../core/services/auth.service';
+import { AuctionService, AuctionDto } from '../../core/services/auction.service';
 import { Property, Review, CATEGORY_LABELS, LISTING_TYPE_LABELS } from '../../core/models';
 import { environment } from '../../../environments/environment';
 
@@ -27,15 +28,17 @@ export class PropertyDetailComponent implements OnInit {
   private svc        = inject(PropertyService);
   private revSvc     = inject(ReviewService);
   private contactSvc = inject(ContactService);
-  protected authSvc    = inject(AuthService);
+  private auc        = inject(AuctionService);
   private http       = inject(HttpClient);
   private route      = inject(ActivatedRoute);
+  protected authSvc  = inject(AuthService);
 
-  property    = signal<Property | null>(null);
-  reviews     = signal<Review[]>([]);
-  loading     = signal(true);
-  seller      = signal<SellerInfo | null>(null);
-  placeholder = 'https://placehold.co/900x420/eee/999?text=hw26';
+  property     = signal<Property | null>(null);
+  reviews      = signal<Review[]>([]);
+  loading      = signal(true);
+  seller       = signal<SellerInfo | null>(null);
+  auction      = signal<AuctionDto | null>(null);
+  placeholder  = 'https://placehold.co/900x420/eee/999?text=hw26';
   currentPhoto = signal(0);
   showModal    = signal(false);
   contactMsg   = '';
@@ -57,6 +60,10 @@ export class PropertyDetailComponent implements OnInit {
           next: (s) => this.seller.set({ name: s.name, surname: s.surname, email: s.email }),
           error: ()  => this.seller.set(null),
         });
+        this.auc.getByPostId(id).subscribe({
+          next: (a) => { if (!a.closed) this.auction.set(a); },
+          error: () => {},
+        });
       },
       error: () => { this.property.set(null); this.loading.set(false); },
     });
@@ -64,9 +71,15 @@ export class PropertyDetailComponent implements OnInit {
     this.revSvc.list(id).subscribe({ next: (r) => this.reviews.set(r) });
   }
 
+  formatPrice(n: number): string {
+    return new Intl.NumberFormat('it-IT', {
+      style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+    }).format(n);
+  }
+
   openModal(): void {
     this.showModal.set(true);
-    this.contactMsg   = '';
+    this.contactMsg = '';
     this.contactSent.set(false);
     this.contactError.set(null);
   }
@@ -83,18 +96,14 @@ export class PropertyDetailComponent implements OnInit {
     this.currentPhoto.update(i => (i + 1) % photos.length);
   }
 
-  goToPhoto(index: number): void {
-    this.currentPhoto.set(index);
-  }
+  goToPhoto(index: number): void { this.currentPhoto.set(index); }
 
   sendContact(): void {
     const user = this.authSvc.user();
     const p    = this.property();
     if (!user || !p) return;
-
     this.sending.set(true);
     this.contactError.set(null);
-
     this.contactSvc.send({
       senderName:    user.name,
       senderSurname: user.surname,

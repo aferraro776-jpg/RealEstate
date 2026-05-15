@@ -1,0 +1,82 @@
+<div class="modal-backdrop" (click)="close()"></div>
+
+<div class="modal-box" role="dialog" aria-modal="true">
+    <div class="modal-header">
+        <h5 class="modal-title serif">Asta — {{ post.title }}</h5>
+        <button class="btn-close-modal" (click)="close()" aria-label="Chiudi">✕</button>
+    </div>
+
+    @if (existingAuction(); as a) {
+        <div class="auction-existing">
+            <div class="auction-status-badge" [class.closed]="a.closed">
+                {{ a.closed ? 'Asta chiusa' : 'Asta in corso' }}
+            </div>
+            <div class="auction-info-row">
+                <span class="label">Offerta più alta</span>
+                <span class="value accent">{{ formatPrice(a.currentBest) }}</span>
+            </div>
+            <div class="auction-info-row">
+                <span class="label">Prezzo di partenza</span>
+                <span class="value">{{ formatPrice(a.startingPrice) }}</span>
+            </div>
+            <div class="auction-info-row">
+                <span class="label">Scadenza</span>
+                <span class="value">{{ a.endDate | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            @if (!a.closed) {
+                <button class="btn btn-outline-danger btn-sm mt-3" (click)="deleteAuction()">
+                    Elimina asta
+                </button>
+            }
+            @if (error()) {
+                <p class="error-msg mt-2">{{ error() }}</p>
+            }
+        </div>
+    } @else {
+        <form (ngSubmit)="submit()" #f="ngForm">
+            <div class="form-group">
+                <label for="startingPrice">Prezzo di partenza (€)</label>
+                <input
+                        id="startingPrice"
+                        type="number"
+                        class="form-control"
+                        [ngModel]="startingPrice()"
+                        (ngModelChange)="startingPrice.set($event)"
+                        name="startingPrice"
+                        min="1"
+                        step="1000"
+                        required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="durationDays">Durata (giorni)</label>
+                <input
+                        id="durationDays"
+                        type="number"
+                        class="form-control"
+                        [ngModel]="durationDays()"
+                        (ngModelChange)="durationDays.set($event)"
+                        name="durationDays"
+                        min="1"
+                        max="90"
+                        required
+                />
+                <small class="form-hint">
+                    Scadenza prevista: {{ formatDate(durationDays()) }}
+                </small>
+            </div>
+
+            @if (error()) {
+                <p class="error-msg">{{ error() }}</p>
+            }
+
+            <div class="modal-footer-actions">
+                <button type="button" class="btn btn-outline-secondary" (click)="close()">Annulla</button>
+                <button type="submit" class="btn btn-hw" [disabled]="loading()">
+                    {{ loading() ? 'Creazione...' : 'Avvia asta' }}
+                </button>
+            </div>
+        </form>
+    }
+</div>

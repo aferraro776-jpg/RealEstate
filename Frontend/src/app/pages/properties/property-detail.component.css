@@ -138,3 +138,42 @@
     transition: background 180ms ease;
 }
 .dot.active { background: #fff; }
+
+.auction-info-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #1a4f8a;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    color: #fff;
+}
+
+.auction-banner-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #7ec8f7;
+    flex-shrink: 0;
+    animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+.auction-banner-title {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.auction-banner-price {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.75); }
+}

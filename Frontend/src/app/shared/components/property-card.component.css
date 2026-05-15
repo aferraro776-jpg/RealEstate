@@ -16,3 +16,36 @@
 .property-card:hover .img-wrap img {
     transform: scale(1.04);
 }
+
+.price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.auction-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #1a4f8a;
+    border-radius: 8px;
+    padding: 0.25rem 0.6rem;
+    line-height: 1.2;
+    flex-shrink: 0;
+}
+
+.auction-pill-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.auction-pill-price {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+}

@@ -20,17 +20,25 @@
                 <i class="bi bi-geo-alt"></i> {{ property.city }} — {{ property.address }}
             </p>
 
-            <p class="mb-3">
-                @if (property.oldPrice && property.oldPrice > property.price) {
-                    <span class="price-old">{{ property.oldPrice | number:'1.0-0' }} €</span>
-                }
-                <span class="price-new fs-5">
-          {{ property.price | number:'1.0-0' }} €
-                    @if (property.listingType === 'RENT') {
-                        <small class="muted">/mese</small>
+            <div class="price-row mb-3">
+                <div>
+                    @if (property.oldPrice && property.oldPrice > property.price) {
+                        <span class="price-old">{{ property.oldPrice | number:'1.0-0' }} €</span>
                     }
-        </span>
-            </p>
+                    <span class="price-new fs-5">
+                        {{ property.price | number:'1.0-0' }} €
+                        @if (property.listingType === 'RENT') {
+                            <small class="muted">/mese</small>
+                        }
+                    </span>
+                </div>
+                @if (auction()) {
+                    <div class="auction-pill">
+                        <span class="auction-pill-label">Asta</span>
+                        <span class="auction-pill-price">{{ formatPrice(auction()!.currentBest) }}</span>
+                    </div>
+                }
+            </div>
 
             <div class="mt-auto pt-2 border-top small muted d-flex justify-content-between">
                 <span><i class="bi bi-rulers"></i> {{ property.squareMeters }} m²</span>

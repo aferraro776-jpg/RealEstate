@@ -46,7 +46,6 @@
 
             <div class="row g-4">
 
-                <!-- Colonna sinistra: info -->
                 <div class="col-md-8">
                     <div class="d-flex gap-2 mb-3 flex-wrap">
                         <span class="hw-badge primary">{{ listingLabel() }}</span>
@@ -60,7 +59,6 @@
                         <strong>Superficie:</strong> {{ property()!.squareMeters }} m²
                     </p>
 
-                    <!-- Box venditore -->
                     <div class="seller-box mt-4 p-3 border rounded-3 bg-white">
                         <p class="small text-uppercase muted mb-2">Venditore</p>
 
@@ -75,16 +73,24 @@
                             <p class="muted small mb-0">{{ property()!.sellerName }}</p>
                         }
 
-                        <!-- Pulsante visibile SOLO agli utenti BUYER -->
                         @if (authSvc.hasRole('BUYER')) {
                             <button class="btn btn-hw-outline btn-sm mt-3" (click)="openModal()">
                                 <i class="bi bi-envelope me-2"></i>Contatta il venditore
                             </button>
                         }
                     </div>
+
+                    @if (auction()) {
+                        <div class="auction-info-banner mt-3">
+                            <div class="auction-banner-dot"></div>
+                            <div>
+                                <span class="auction-banner-title">Asta in corso</span>
+                                <span class="auction-banner-price">{{ formatPrice(auction()!.currentBest) }}</span>
+                            </div>
+                        </div>
+                    }
                 </div>
 
-                <!-- Colonna destra: prezzo -->
                 <div class="col-md-4">
                     <div class="price-box">
                         <p class="mb-1 muted small text-uppercase price-label">Prezzo</p>
@@ -101,7 +107,6 @@
                 </div>
             </div>
 
-            <!-- Recensioni -->
             <hr class="my-4" />
             <h3 class="serif mb-3">Recensioni</h3>
 
@@ -123,7 +128,6 @@
     </div>
 </section>
 
-<!-- ── Modale contatta venditore ── -->
 @if (showModal()) {
     <div class="modal-backdrop" (click)="closeModal()"></div>
     <div class="modal-box rounded-3 p-4 bg-white shadow-lg">
@@ -151,7 +155,7 @@
                 <textarea class="form-control" rows="5"
                           [(ngModel)]="contactMsg"
                           placeholder="Es: Sono interessato all'immobile, vorrei fissare una visita...">
-        </textarea>
+                </textarea>
             </div>
 
             @if (contactError()) {

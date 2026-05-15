@@ -1,31 +1,37 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { Auction, Bid } from '../models';
+
+export interface AuctionDto {
+  id: number;
+  postId: number;
+  startingPrice: number;
+  currentBest: number;
+  endDate: string;
+  closed: boolean;
+  winnerId: number | null;
+}
+
+export interface AuctionCreateRequest {
+  postId: number;
+  startingPrice: number;
+  durationDays: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuctionService {
   private http = inject(HttpClient);
-  private base = environment.apiUrl;
+  private base = 'http://localhost:8080/api/auctions';
 
-  byProperty(propertyId: number): Observable<Auction | null> {
-    return this.http.get<Auction | null>(`${this.base}/properties/${propertyId}/auction`);
+  create(req: AuctionCreateRequest): Observable<AuctionDto> {
+    return this.http.post<AuctionDto>(this.base, req);
   }
 
-  create(propertyId: number, payload: { startPrice: number; endsAt: string }): Observable<Auction> {
-    return this.http.post<Auction>(`${this.base}/properties/${propertyId}/auction`, payload);
+  getByPostId(postId: number): Observable<AuctionDto> {
+    return this.http.get<AuctionDto>(`${this.base}/post/${postId}`);
   }
 
-  placeBid(auctionId: number, amount: number): Observable<Bid> {
-    return this.http.post<Bid>(`${this.base}/auctions/${auctionId}/bids`, { amount });
-  }
-
-  bids(auctionId: number): Observable<Bid[]> {
-    return this.http.get<Bid[]>(`${this.base}/auctions/${auctionId}/bids`);
-  }
-
-  close(auctionId: number): Observable<Auction> {
-    return this.http.post<Auction>(`${this.base}/auctions/${auctionId}/close`, {});
+  delete(auctionId: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/${auctionId}`);
   }
 }

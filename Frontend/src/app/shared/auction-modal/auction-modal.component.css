@@ -1,0 +1,126 @@
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1040;
+    animation: fadeIn 0.18s ease;
+}
+
+.modal-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+    animation: slideUp 0.22s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.modal-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.btn-close-modal {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.15s;
+}
+
+.btn-close-modal:hover { color: #222; }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-hint {
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.error-msg {
+    color: #a12c7b;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+
+.modal-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.auction-existing {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.auction-status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: #d4f4e4;
+    color: #1a6640;
+    width: fit-content;
+    margin-bottom: 0.5rem;
+}
+
+.auction-status-badge.closed {
+    background: #f0e0e0;
+    color: #8b2020;
+}
+
+.auction-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.9rem;
+}
+
+.auction-info-row .label { color: #666; }
+.auction-info-row .value { font-weight: 600; }
+.auction-info-row .value.accent { color: #01696f; font-size: 1.05rem; }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translate(-50%, calc(-50% + 16px)); opacity: 0; }
+    to   { transform: translate(-50%, -50%); opacity: 1; }
+}

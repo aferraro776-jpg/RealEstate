@@ -8,13 +8,11 @@
 
         @if (loading()) {
             <p class="muted">Caricamento...</p>
-
         } @else if (items().length === 0) {
             <div class="empty-state">
                 <p class="muted mb-3">Non hai ancora pubblicato annunci.</p>
                 <a routerLink="/seller/new" class="btn btn-hw">Pubblica il primo</a>
             </div>
-
         } @else {
             <div class="table-responsive bg-white border rounded-3">
                 <table class="table align-middle mb-0">
@@ -25,6 +23,7 @@
                         <th>Tipo</th>
                         <th>Categoria</th>
                         <th>Prezzo</th>
+                        <th>Asta</th>
                         <th>Azioni</th>
                     </tr>
                     </thead>
@@ -44,17 +43,25 @@
                                     }
                                     <span class="price-new">{{ p.price | number:'1.0-0' }} €</span>
                                 </td>
+                                <td>
+                                    @if (getAuction(p.id); as a) {
+                                        <div class="auction-cell">
+                      <span class="auction-live-badge" [class.closed]="a.closed">
+                        {{ a.closed ? 'Chiusa' : 'In corso' }}
+                      </span>
+                                            <span class="auction-best">{{ formatPrice(a.currentBest) }}</span>
+                                        </div>
+                                    } @else {
+                                        <span class="muted small">—</span>
+                                    }
+                                </td>
                                 <td class="text-nowrap">
                                     <a [routerLink]="['/seller/edit', p.id]"
                                        class="btn btn-sm btn-outline-secondary me-1">Modifica</a>
                                     <button class="btn btn-sm btn-outline-secondary me-1"
                                             (click)="lower(p)">Ribassa</button>
                                     <button class="btn btn-sm btn-outline-secondary me-1"
-                                            (click)="createAuction(p)">Asta</button>
-                                    <button class="btn btn-sm btn-outline-secondary me-1"
-                                            (click)="promote(p)" title="Promuovi su Facebook">
-                                        <i class="bi bi-facebook"></i>
-                                    </button>
+                                            (click)="openAuctionModal(p)">Asta</button>
                                     <button class="btn btn-sm btn-outline-danger"
                                             (click)="remove(p)">Elimina</button>
                                 </td>
@@ -71,3 +78,12 @@
 
     </div>
 </section>
+
+@if (modalPost()) {
+    <app-auction-modal
+            [post]="modalPost()!"
+            (closed)="closeAuctionModal()"
+            (created)="onAuctionCreated($event)"
+            (deleted)="onAuctionDeleted($event)"
+    />
+}
