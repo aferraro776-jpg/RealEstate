@@ -9,7 +9,9 @@
             </div>
             <div class="col-md-6 text-md-end small muted footer-links">
                 <a routerLink="/properties" class="me-3">Annunci</a>
-                <a routerLink="/login"      class="me-3">Accedi</a>
+                @if (!authSvc.isLoggedIn()) {
+                    <a routerLink="/login" class="me-3">Accedi</a>
+                }
                 <span>&copy; {{ year }} hw26 — Progetto universitario</span>
             </div>
         </div>
