@@ -47,6 +47,13 @@
             Ciao, <strong>{{ auth.user()?.name }} {{ auth.user()?.surname }}</strong>
             <span class="hw-badge ms-2">{{ auth.user()?.role }}</span>
           </span>
+                    @if (auth.hasRole('BUYER', 'SELLER')) {
+                        <a routerLink="/profile"
+                           class="btn btn-outline-secondary btn-sm"
+                           (click)="open = false">
+                            <i class="bi bi-person me-1"></i>Profilo
+                        </a>
+                    }
                     <button class="btn btn-hw-outline btn-sm" (click)="logout()">Esci</button>
                 } @else {
                     <a routerLink="/login"    class="btn btn-hw-outline btn-sm">Accedi</a>

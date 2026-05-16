@@ -37,7 +37,6 @@ export const routes: Routes = [
   {
     path: 'seller',
     canActivate: [roleGuard('SELLER', 'ADMIN')],
-    // ← shell component con router-outlet al posto di seller-dashboard direttamente
     loadComponent: () =>
         import('./pages/seller/seller-shell.component').then(m => m.SellerShellComponent),
     children: [
@@ -63,6 +62,11 @@ export const routes: Routes = [
     canActivate: [roleGuard('ADMIN')],
     loadComponent: () =>
         import('./pages/admin/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+  },{
+    path: 'profile',
+    canActivate: [roleGuard('BUYER', 'SELLER')],
+    loadComponent: () =>
+        import('./pages/profile/profile.component').then(m => m.ProfileComponent),
   },
   {
     path: 'oauth2/callback',

@@ -1,0 +1,193 @@
+<section class="page-pad">
+    <div class="container" style="max-width: 680px;">
+
+        @if (loading()) {
+            <p class="muted">Caricamento profilo…</p>
+
+        } @else if (!profile()) {
+            <p class="muted">Impossibile caricare il profilo.</p>
+
+        } @else {
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="profile-avatar">
+                    {{ profile()!.name.charAt(0) }}{{ profile()!.surname.charAt(0) }}
+                </div>
+                <div>
+                    <h1 class="serif mb-0 fs-3">
+                        {{ profile()!.name }} {{ profile()!.surname }}
+                    </h1>
+                    <p class="muted small mb-0">
+                        {{ profile()!.email }}
+                        <span class="hw-badge ms-2">{{ profile()!.role }}</span>
+                        @if (isOAuth()) {
+                            <span class="hw-badge ms-1">Google</span>
+                        }
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tab -->
+            <div class="d-flex gap-2 mb-4 border-bottom pb-2">
+                <button class="btn btn-sm"
+                        [class.btn-hw-outline]="activeTab() === 'info'"
+                        [class.btn-outline-secondary]="activeTab() !== 'info'"
+                        (click)="activeTab.set('info')">
+                    Dati personali
+                </button>
+                @if (!isOAuth()) {
+                    <button class="btn btn-sm"
+                            [class.btn-hw-outline]="activeTab() === 'password'"
+                            [class.btn-outline-secondary]="activeTab() !== 'password'"
+                            (click)="activeTab.set('password')">
+                        Cambio password
+                    </button>
+                }
+                <button class="btn btn-sm"
+                        [class.btn-outline-danger]="activeTab() !== 'danger'"
+                        [class.btn-danger]="activeTab() === 'danger'"
+                        (click)="activeTab.set('danger')">
+                    Elimina Account
+                </button>
+            </div>
+
+            @if (activeTab() === 'info') {
+                <div class="d-flex flex-column gap-3">
+
+                    @if (isOAuth()) {
+                        <div class="alert alert-info small py-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Nome e cognome sono gestiti da Google e non modificabili.
+                        </div>
+                    }
+
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label class="form-label small text-uppercase muted">Nome</label>
+                            <input type="text" class="form-control"
+                                   [ngModel]="editName()"
+                                   (ngModelChange)="editName.set($event)"
+                                   [disabled]="isOAuth()" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small text-uppercase muted">Cognome</label>
+                            <input type="text" class="form-control"
+                                   [ngModel]="editSurname()"
+                                   (ngModelChange)="editSurname.set($event)"
+                                   [disabled]="isOAuth()" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label small text-uppercase muted">Email</label>
+                        <input type="email" class="form-control"
+                               [value]="profile()!.email"
+                               disabled />
+                        <p class="form-text small muted">L'email non è modificabile.</p>
+                    </div>
+
+                    <div>
+                        <label class="form-label small text-uppercase muted">Data di nascita</label>
+                        <input type="date" class="form-control"
+                               [ngModel]="editBirthDate()"
+                               (ngModelChange)="editBirthDate.set($event)" />
+                    </div>
+
+                    @if (infoSuccess()) {
+                        <div class="alert alert-success small py-2">{{ infoSuccess() }}</div>
+                    }
+                    @if (infoError()) {
+                        <div class="alert alert-danger small py-2">{{ infoError() }}</div>
+                    }
+
+                    <div>
+                        <button class="btn btn-hw-outline btn-sm"
+                                [disabled]="savingInfo()"
+                                (click)="saveInfo()">
+                            {{ savingInfo() ? 'Salvataggio…' : 'Salva modifiche' }}
+                        </button>
+                    </div>
+                </div>
+            }
+
+            @if (activeTab() === 'password' && !isOAuth()) {
+                <div class="d-flex flex-column gap-3">
+
+                    <div>
+                        <label class="form-label small text-uppercase muted">Password attuale</label>
+                        <input type="password" class="form-control"
+                               [ngModel]="oldPassword()"
+                               (ngModelChange)="oldPassword.set($event)"
+                               autocomplete="current-password" />
+                    </div>
+
+                    <div>
+                        <label class="form-label small text-uppercase muted">Nuova password</label>
+                        <input type="password" class="form-control"
+                               [ngModel]="newPassword()"
+                               (ngModelChange)="newPassword.set($event)"
+                               autocomplete="new-password" />
+                    </div>
+
+                    <div>
+                        <label class="form-label small text-uppercase muted">Conferma nuova password</label>
+                        <input type="password" class="form-control"
+                               [ngModel]="newPassword2()"
+                               (ngModelChange)="newPassword2.set($event)"
+                               autocomplete="new-password" />
+                    </div>
+
+                    @if (pwdSuccess()) {
+                        <div class="alert alert-success small py-2">{{ pwdSuccess() }}</div>
+                    }
+                    @if (pwdError()) {
+                        <div class="alert alert-danger small py-2">{{ pwdError() }}</div>
+                    }
+
+                    <div>
+                        <button class="btn btn-hw-outline btn-sm"
+                                [disabled]="!oldPassword() || !newPassword() || !newPassword2() || savingPwd()"
+                                (click)="savePassword()">
+                            {{ savingPwd() ? 'Salvataggio…' : 'Aggiorna password' }}
+                        </button>
+                    </div>
+                </div>
+            }
+
+            @if (activeTab() === 'danger') {
+                <div class="border border-danger rounded-3 p-4">
+                    <h5 class="text-danger mb-1">Elimina account</h5>
+                    <p class="small muted mb-3">
+                        Questa operazione è irreversibile. Tutti i tuoi dati verranno eliminati definitivamente.
+                    </p>
+
+                    @if (!confirmDelete()) {
+                        <button class="btn btn-outline-danger btn-sm"
+                                (click)="confirmDelete.set(true)">
+                            Elimina il mio account
+                        </button>
+                    } @else {
+                        <p class="small text-danger fw-semibold mb-2">
+                            Sei sicuro? Questa azione non può essere annullata.
+                        </p>
+
+                        @if (deleteError()) {
+                            <div class="alert alert-danger small py-2 mb-2">{{ deleteError() }}</div>
+                        }
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-danger btn-sm"
+                                    [disabled]="deleting()"
+                                    (click)="deleteAccount()">
+                                {{ deleting() ? 'Eliminazione…' : 'Sì, elimina definitivamente' }}
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm"
+                                    (click)="confirmDelete.set(false)">
+                                Annulla
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+</section>
